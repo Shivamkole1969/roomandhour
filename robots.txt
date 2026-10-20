@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shivamkole1969.github.io/roomandhour/sitemap.xml

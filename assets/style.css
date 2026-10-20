@@ -1,0 +1,39 @@
+:root{--bg:#0B0F19;--bg2:#0F1524;--panel:#131B2C;--panel2:#18223A;--line:rgba(255,255,255,.1);--text:#E7ECF5;--muted:#9AA6BD;--gold:#FFD700;--gold-d:#C9A800;--sky:#38BDF8}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 17px/1.6 Montserrat,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+img{max-width:100%;height:auto;display:block}a{color:var(--sky)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header.site{border-bottom:1px solid var(--line);background:var(--bg2)}
+header.site .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding-top:12px;padding-bottom:12px}
+.logo{font:400 26px/1 Anton,Impact,"Arial Narrow",sans-serif;letter-spacing:.14em;color:var(--gold);text-decoration:none;text-transform:uppercase}
+nav{display:flex;flex-wrap:wrap;gap:4px 18px}nav a{color:var(--text);text-decoration:none;font-weight:600;font-size:15px;padding:6px 0}nav a:hover{color:var(--gold)}
+.hero{padding:44px 20px 36px;display:grid;gap:28px;align-items:center;grid-template-columns:minmax(0,1fr)}.hero>*{min-width:0}
+.kicker{color:var(--sky);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:13px;margin:0 0 10px}
+h1,h2,h3{font-family:Anton,Impact,"Arial Narrow",sans-serif;font-weight:400;letter-spacing:.02em;line-height:1.1;margin:0 0 .5em}
+h1{font-size:clamp(34px,8vw,60px);color:#fff}h1 em{font-style:normal;color:var(--gold)}
+h2{font-size:clamp(26px,5vw,36px);color:var(--gold);margin-top:0}h3{font-size:20px;color:#fff;letter-spacing:.03em}
+p{margin:0 0 1em}.lead{font-size:18px;color:var(--muted);max-width:60ch}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 0}
+.btn{display:inline-block;padding:15px 24px;border-radius:12px;font-weight:700;text-decoration:none;text-align:center;font-size:16px;border:2px solid var(--gold);min-height:48px}
+.btn.gold{background:var(--gold);color:#0B0F19}.btn.gold:hover{background:var(--gold-d);border-color:var(--gold-d)}
+.btn.ghost{color:var(--gold);background:transparent}.btn.ghost:hover{background:rgba(255,215,0,.1)}
+.btn.sky{border-color:var(--sky);color:var(--sky)}
+.btn.big{font-size:18px;padding:18px 30px}
+section{padding:36px 0;border-top:1px solid var(--line)}
+.steps{display:grid;gap:14px;counter-reset:s;padding:0;list-style:none;margin:0}
+.steps li{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.steps li:before{content:counter(s);display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#0B0F19;font-weight:800;align-items:center;justify-content:center;margin-bottom:8px}
+.steps b{display:block;color:#fff;font-size:18px}.steps span{color:var(--muted)}
+.books{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.book{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.book img{width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--bg2)}
+.book div{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.book h3{margin:0;font-family:Montserrat,system-ui,sans-serif;font-weight:700;font-size:17px;line-height:1.3}
+.book p{color:var(--muted);font-size:15px;margin:0;flex:1}
+.badge{align-self:flex-start;border:1px dashed var(--faint,#5B6780);color:var(--muted);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600}
+.book .btn{padding:11px 16px;font-size:15px}
+ul.check{list-style:none;padding:0;margin:0}ul.check li{padding:6px 0 6px 30px;position:relative}ul.check li:before{content:"\2713";position:absolute;left:0;color:var(--gold);font-weight:800}
+.langs a{margin-right:18px;font-weight:700}
+.shot{border-radius:14px;border:1px solid var(--line);width:100%;max-width:420px;margin:0 auto}
+footer{border-top:1px solid var(--line);background:var(--bg2);padding:28px 0 40px;color:var(--muted);font-size:14px}footer p{margin:0 0 6px}
+@media(min-width:760px){.hero{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);padding:64px 20px 52px}.steps{grid-template-columns:repeat(3,1fr)}body{font-size:18px}}
