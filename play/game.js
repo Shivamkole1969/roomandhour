@@ -1,15 +1,18 @@
 /* Room & Hour: murder-mystery logic puzzles in the browser.
-   Plain JavaScript, no frameworks, no network requests (the CrazyGames SDK is only loaded behind a flag).
+   Plain JavaScript, no frameworks, no network requests (the CrazyGames and GameMonetize SDKs are only loaded behind flags).
    The top part (Logic) is pure and is exported for Node tests (test_game.mjs); the rest is the UI. */
 (function () {
   'use strict';
 
   var CONFIG = {
     title: 'Room & Hour',                 // working title: change the game's name here only
-    edition: 'web',                       // 'web' (itch.io / own site: share + book links) or 'crazygames' (no links, no promotion); set by package.py
+    edition: 'web',                       // 'web' (itch.io / own site: share + book links), 'crazygames' or 'gamemonetize' (portals: no links, no promotion); set by package.py
     testDate: '',                         // 'YYYY-MM-DD' pretends today is that date (also ?date=YYYY-MM-DD); used by tests and screenshots
     crazygames: false,                    // build flag: true loads the CrazyGames SDK v3 (also on with ?crazygames=1)
     crazySdkUrl: 'https://sdk.crazygames.com/crazygames-sdk-v3.js',
+    gamemonetize: false,                  // build flag: true loads the GameMonetize SDK (one ad when a case opens, never on a timer)
+    gmGameId: '',                         // GameMonetize game ID; set by package.py
+    gmSdkUrl: 'https://api.gamemonetize.com/sdk.js',
     storageKey: 'roomhour.v1',
     wrongPenalty: 30,                     // seconds added to the clock for a wrong accusation
     version: '1.1.0',
@@ -540,7 +543,7 @@
     muted: function () {
       var cgMute = false;
       try { cgMute = CG.on && CG.sdk.game.settings && CG.sdk.game.settings.muteAudio; } catch (e) { cgMute = false; }
-      return save.muted || cgMute;
+      return save.muted || cgMute || GM.ad;
     },
     tone: function (freq, start, dur, type, vol) {
       var ctx = this.ctx, o = ctx.createOscillator(), g = ctx.createGain();
@@ -597,6 +600,31 @@
     if (CG.playing === on) return;
     CG.playing = on;
     cg(function (sdk) { if (on) sdk.game.gameplayStart(); else sdk.game.gameplayStop(); });
+  }
+
+  // =================================================================================================== GameMonetize SDK (optional)
+  // One ad when a case opens (a natural break; GameMonetize forbids ads on timers). While an ad plays the SDK sends
+  // SDK_GAME_PAUSE: the clock stops and sounds are muted until SDK_GAME_START. The SDK exposes itself as window.sdk.
+  var GM = { on: false, ad: false };
+  function loadGM() {
+    if (!CONFIG.gamemonetize || !CONFIG.gmGameId || !CONFIG.gmSdkUrl) return;
+    window.SDK_OPTIONS = {
+      gameId: CONFIG.gmGameId,
+      onEvent: function (e) {
+        var name = e && e.name;
+        if (name === 'SDK_READY') GM.on = true;
+        else if (name === 'SDK_GAME_PAUSE') { GM.ad = true; if (ui.screen === 'case') stopTimer(); }
+        else if (name === 'SDK_GAME_START') { GM.ad = false; if (ui.screen === 'case') startTimer(); }
+      }
+    };
+    if (doc.getElementById('gamemonetize-sdk')) return;
+    var s = doc.createElement('script');
+    s.id = 'gamemonetize-sdk';
+    s.src = CONFIG.gmSdkUrl;
+    doc.head.appendChild(s);
+  }
+  function gmAd() {
+    try { if (GM.on && window.sdk && typeof window.sdk.showBanner === 'function') window.sdk.showBanner(); } catch (e) { /* never let ads break the game */ }
   }
 
   // =================================================================================================== layout
@@ -1097,6 +1125,7 @@
     ui.drawerMin = false;
     ui.accuse = { killer: -1, room: -1, hour: -1, object: -1 };
     renderCase();
+    gmAd();
     if (ui.st.solved) { cgPlay(false); return; }
     if (!ui.st.started) showIntro(); else startPlay();
   }
@@ -1289,7 +1318,7 @@
 
   // =================================================================================================== timer
   function startTimer() {
-    if (!ui.st || ui.st.solved || !ui.st.started || doc.hidden) return;
+    if (!ui.st || ui.st.solved || !ui.st.started || doc.hidden || GM.ad) return;
     ui.timerOn = true; ui.lastTick = performance.now();
   }
   function stopTimer() { tick(); ui.timerOn = false; }
@@ -1661,6 +1690,7 @@
   function boot() {
     doc.title = CONFIG.title;
     applyLayout();
+    loadGM();
     loadCrazy().then(function () {
       cg(function (sdk) { sdk.game.loadingStart(); });
       loadSave();
