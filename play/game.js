@@ -23,7 +23,7 @@
       en: 'https://www.amazon.com/dp/B0HP7WGW9F',
       de: 'https://www.amazon.de/dp/B0HP7YZ91L',
       fr: 'https://www.amazon.fr/s?k=Room+%26+Hour+Calendrier+de+l%27Avent+des+Enqu%C3%AAtes',
-      vol1: 'https://www.amazon.com/s?k=Room+%26+Hour+Murder+Mystery+Puzzle+Book+Volume+1'
+      vol1: 'https://www.amazon.com/dp/B0HP85GKD3'
     },
     /*WEB-ONLY-END*/
     adventYearDays: 24
