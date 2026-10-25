@@ -20,8 +20,8 @@
     // Web edition only (package.py strips this block from the CrazyGames build). Swap in the product URLs after launch.
     siteUrl: 'https://shivamkole1969.itch.io/room-and-hour',
     books: {
-      en: 'https://www.amazon.com/s?k=Room+%26+Hour+Murder+Mystery+Advent+Calendar',
-      de: 'https://www.amazon.de/s?k=Room+%26+Hour+Krimi+Adventskalender',
+      en: 'https://www.amazon.com/dp/B0HP7WGW9F',
+      de: 'https://www.amazon.de/dp/B0HP7YZ91L',
       fr: 'https://www.amazon.fr/s?k=Room+%26+Hour+Calendrier+de+l%27Avent+des+Enqu%C3%AAtes',
       vol1: 'https://www.amazon.com/s?k=Room+%26+Hour+Murder+Mystery+Puzzle+Book+Volume+1'
     },
