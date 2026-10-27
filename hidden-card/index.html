@@ -35,6 +35,8 @@ header.top .wrap { display: flex; align-items: center; justify-content: space-be
 .brand { font-family: var(--serif); font-weight: 700; color: var(--gold); text-decoration: none; font-size: 1.2rem; }
 header.top nav a { color: var(--muted); text-decoration: none; font-size: .92rem; margin-left: 14px; }
 header.top nav a:hover { color: var(--text); }
+.brand, header.top nav a { white-space: nowrap; }
+@media (max-width: 440px) { header.top nav a + a { display: none; } }
 section { padding: 28px 0; }
 section + section { border-top: 1px solid var(--line); }
 .kicker { margin: 0 0 6px; color: var(--sky); font-weight: 700; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }

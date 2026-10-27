@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B0F19">
+<title>Who Took the Christmas Star? Free Mystery Party Game on One Phone</title>
+<meta name="description" content="A free Christmas mystery party game for 4 to 8 players. No printing, no prep, no sign-up: pass one phone, read your secret card and catch the thief in about 30 minutes. A new thief every game.">
+<link rel="canonical" href="https://shivamkole1969.github.io/roomandhour/party/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Room &amp; Hour">
+<meta property="og:title" content="Who Took the Christmas Star? A free mystery party game on one phone">
+<meta property="og:description" content="4 to 8 players, 30 minutes, nothing to print. One of you is the thief.">
+<meta property="og:url" content="https://shivamkole1969.github.io/roomandhour/party/">
+<meta property="og:image" content="https://shivamkole1969.github.io/roomandhour/img/party-og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%230B0F19'/%3E%3Cpath d='M20 6l4 9 10 1-7.5 6.5L29 33l-9-5.5L11 33l2.5-10.5L6 16l10-1z' fill='%23FFD700'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #0B0F19; --panel: #131B2C; --panel2: #18223A; --line: rgba(255,255,255,.08); --line2: rgba(255,255,255,.16);
+  --text: #E7ECF5; --muted: #8E9AB2; --gold: #FFD700; --sky: #38BDF8; --good: #4ADE80; --bad: #FB7185;
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font: 16px/1.55 var(--sans);
+  background-image: radial-gradient(40rem 28rem at 10% -8%, rgba(56,189,248,.10), transparent 62%),
+                    radial-gradient(36rem 30rem at 110% 105%, rgba(255,215,0,.07), transparent 60%); }
+a { color: var(--sky); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+header.top { border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; }
+.brand { font-family: var(--serif); font-weight: 700; color: var(--gold); text-decoration: none; font-size: 1.2rem; }
+header.top nav a { color: var(--muted); text-decoration: none; font-size: .92rem; margin-left: 14px; }
+.brand, header.top nav a { white-space: nowrap; }
+@media (max-width: 440px) { header.top nav a + a { display: none; } }
+section { padding: 26px 0; }
+section + section { border-top: 1px solid var(--line); }
+.kicker { margin: 0 0 6px; color: var(--sky); font-weight: 700; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
+h1 { margin: 0 0 10px; font-family: var(--serif); font-size: clamp(1.8rem, 7vw, 2.6rem); line-height: 1.1; }
+h2 { margin: 0 0 10px; font-family: var(--serif); font-size: 1.45rem; line-height: 1.2; }
+h3 { margin: 18px 0 6px; font-size: 1rem; }
+.lead { margin: 0 0 16px; color: #C9D2E3; font-size: 1.05rem; }
+.card { background: var(--panel); border: 1px solid var(--line2); border-radius: 16px; padding: 16px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
+.facts li { border: 1px solid var(--line2); background: var(--panel2); border-radius: 999px; padding: 6px 12px; font-weight: 600; font-size: .9rem; }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 18px; border-radius: 12px;
+  border: 1px solid var(--line2); background: var(--panel2); color: var(--text); font: 700 1rem var(--sans); text-decoration: none; cursor: pointer; }
+.btn:hover { border-color: var(--sky); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.gold { background: var(--gold); color: #1A1400; border-color: var(--gold); }
+.btn.big { min-height: 54px; font-size: 1.08rem; flex: 1 1 100%; }
+@media (min-width: 560px) { .btn.big { flex: 0 1 auto; } }
+.btn.small { min-height: 38px; padding: 0 12px; font-size: .9rem; }
+ol.steps { margin: 0; padding-left: 1.3rem; } ol.steps li { margin: 0 0 8px; }
+.names { display: grid; gap: 10px; margin: 6px 0 0; }
+.names .row { display: flex; gap: 8px; }
+input[type=text] { flex: 1; min-width: 0; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line2); background: var(--panel2);
+  color: var(--text); font: 600 1.05rem var(--sans); }
+input[type=text]:focus { outline: 2px solid var(--sky); outline-offset: 1px; }
+.x { flex: 0 0 48px; }
+.msg { min-height: 1.4em; margin: 10px 0 0; font-weight: 600; color: var(--bad); }
+.read { font-family: var(--serif); font-size: 1.12rem; line-height: 1.6; }
+.map { display: grid; gap: 8px; margin-top: 14px; }
+.map .row { display: grid; grid-template-columns: 1fr 74px 1fr; align-items: center; }
+.room { background: var(--panel2); border: 1px solid var(--line2); border-radius: 10px; padding: 10px 6px; text-align: center; font-weight: 700; font-size: .92rem; }
+.link { text-align: center; color: var(--sky); font-size: .72rem; line-height: 1.15; border-top: 2px dashed rgba(56,189,248,.5); padding-top: 4px; margin: 0 4px; }
+.room.hall { border-color: var(--gold); color: var(--gold); }
+.who { display: grid; gap: 10px; }
+.who button { justify-content: space-between; }
+.seen { color: var(--good); font-weight: 700; }
+.overlay { position: fixed; inset: 0; z-index: 10; background: #070A12; overflow-y: auto; padding: 18px 0 40px; }
+.badge { display: inline-block; border-radius: 10px; padding: 8px 12px; font-weight: 800; letter-spacing: .02em; margin: 6px 0 4px; }
+.badge.good { background: rgba(74,222,128,.12); color: var(--good); border: 1px solid rgba(74,222,128,.45); }
+.badge.bad { background: rgba(251,113,133,.12); color: var(--bad); border: 1px solid rgba(251,113,133,.5); }
+.secret h2 { color: var(--gold); margin-bottom: 2px; }
+.secret .role { color: var(--muted); margin: 0 0 6px; }
+.secret ul { margin: 6px 0 0; padding-left: 1.2rem; } .secret li { margin-bottom: 6px; }
+.people { display: grid; gap: 10px; }
+.person { background: var(--panel); border: 1px solid var(--line2); border-radius: 14px; padding: 12px 14px; }
+.person b { color: var(--gold); }
+.person .p { color: var(--muted); font-size: .88rem; }
+.person q { display: block; margin-top: 4px; font-family: var(--serif); font-style: italic; color: #C9D2E3; }
+.person .look { margin-top: 4px; font-size: .95rem; }
+.evidence { border-color: var(--gold); background: rgba(255,215,0,.06); }
+.evidence p:not(.kicker) { margin: 0; font-family: var(--serif); font-size: 1.15rem; }
+.timer { display: flex; align-items: center; gap: 10px; margin: 14px 0 0; }
+.timer .t { font: 800 1.6rem var(--sans); font-variant-numeric: tabular-nums; min-width: 4.2ch; }
+.timer .t.done { color: var(--bad); }
+.result { font-size: 1.15rem; font-weight: 800; }
+.result.good { color: var(--good); } .result.bad { color: var(--bad); }
+table.truth { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: .95rem; }
+table.truth td { border-top: 1px solid var(--line); padding: 8px 4px; vertical-align: top; }
+table.truth td:first-child { font-weight: 700; width: 38%; }
+table.truth tr.hall td { color: var(--gold); }
+.promo { display: grid; gap: 16px; align-items: center; }
+@media (min-width: 620px) { .promo { grid-template-columns: 140px 1fr; } }
+.promo img { width: 140px; height: auto; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.45); }
+.muted { color: var(--muted); font-size: .9rem; }
+details { border-top: 1px solid var(--line); padding: 10px 0; } details summary { cursor: pointer; font-weight: 700; }
+footer { padding: 26px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="../">Room &amp; Hour</a>
+<nav><a href="../free/">Free mysteries</a><a href="../hidden-card/">Hidden message</a></nav></div></header>
+<main id="app">
+
+<!-- HOME -->
+<div data-screen="home">
+<section><div class="wrap">
+  <p class="kicker">Free Christmas party game</p>
+  <h1>Who Took the Christmas Star?</h1>
+  <p class="lead">A mystery party game on one phone. Pass it round, read your secret card, and work out which of you stole the star. Nothing to print, no prep, no sign-up.</p>
+  <ul class="facts"><li>4–8 players</li><li>About 30 minutes</li><li>Ages 10+</li><li>Free</li></ul>
+  <div class="btns"><button class="btn gold big" data-go="setup">Start a game</button><button class="btn" id="share-top">Send it to your group</button></div>
+  <p class="muted" id="resume-row" hidden>You have a game in progress. <a href="#" id="resume">Carry on</a></p>
+</div></section>
+<section><div class="wrap">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li>Type everyone's name. The phone gives each of you a character at Holly House.</li>
+    <li>Pass the phone round. Each player secretly reads their card. One of you is the thief, and only the thief knows it.</li>
+    <li>Three short rounds: say where you were at 10:30, look at the evidence, question the suspects.</li>
+    <li>Everyone votes in secret. Then the phone reveals the truth, room by room.</li>
+  </ol>
+  <p>Every game deals a new thief, new alibis and new clues, so you can play again straight away.</p>
+</div></section>
+<section><div class="wrap">
+  <h2>Questions</h2>
+  <details><summary>Do we need to print anything?</summary><p>No. One phone does everything. Keep it on the table and pass it when it asks you to.</p></details>
+  <details><summary>Is it OK for children?</summary><p>Yes. Nobody gets hurt: a precious star goes missing. Ages 10 and up can play; younger children can team up with an adult.</p></details>
+  <details><summary>Can the thief really be caught?</summary><p>Always. Every innocent player's clues fit together, and every game is checked by a computer to make sure the thief's story can be broken. The thief wins only if the group is fooled.</p></details>
+  <details><summary>Does it save our game?</summary><p>On this phone only, so you can pause it. Nothing is sent anywhere and there's no account.</p></details>
+</div></section>
+</div>
+
+<!-- SETUP -->
+<div data-screen="setup" hidden><section><div class="wrap">
+  <p class="kicker">Step 1 of 3</p>
+  <h2>Who's playing?</h2>
+  <p class="lead">4 to 8 players. Use first names; the phone will call each of you by name.</p>
+  <div class="names" id="names"></div>
+  <div class="btns"><button class="btn small" id="add">+ Add a player</button></div>
+  <p class="msg" id="setup-msg" aria-live="polite"></p>
+  <div class="btns"><button class="btn gold big" id="deal">Deal the secret cards</button><button class="btn" data-go="home">Back</button></div>
+</div></section></div>
+
+<!-- STORY -->
+<div data-screen="story" hidden><section><div class="wrap">
+  <p class="kicker">Step 2 of 3 · Someone read this aloud</p>
+  <h2>Christmas Eve at Holly House</h2>
+  <p class="read">Snow is falling, the fire is lit, and on top of the tree in the Great Hall sits the family's antique silver star. At 10:30 the lights flicker and go out for twenty seconds. When they come back on, the star is gone.</p>
+  <p class="read">Everyone was somewhere in the house. One of you took it.</p>
+  <h3>The house</h3>
+  <p class="muted">Some rooms can see into each other. That matters.</p>
+  <div class="map" aria-label="Map of Holly House">
+    <div class="row"><div class="room">Library</div><div class="link">glass doors</div><div class="room">Study</div></div>
+    <div class="row"><div class="room">Kitchen</div><div class="link">serving hatch</div><div class="room">Dining Room</div></div>
+    <div class="row"><div class="room">Music Room</div><div class="link">big window</div><div class="room">Conservatory</div></div>
+    <div class="room hall">Great Hall: the tree and the star</div>
+  </div>
+  <div class="btns"><button class="btn gold big" data-go="deal">Next: secret cards</button></div>
+</div></section></div>
+
+<!-- DEAL -->
+<div data-screen="deal" hidden><section><div class="wrap">
+  <p class="kicker" id="deal-kicker">Step 3 of 3 · Pass the phone</p>
+  <h2 id="deal-h">Read your secret card</h2>
+  <p class="lead">Tap your name, make sure nobody else can see, read your card, then hide it and pass the phone on.</p>
+  <div class="who" id="who"></div>
+  <div class="btns"><button class="btn gold big" id="deal-next" disabled>Everyone has read their card</button></div>
+</div></section></div>
+
+<!-- ROUNDS -->
+<div data-screen="round" hidden><section><div class="wrap">
+  <p class="kicker" id="r-kicker"></p>
+  <h2 id="r-h"></h2>
+  <p class="lead" id="r-lead"></p>
+  <div class="card evidence" id="r-ev" hidden><p class="kicker">Evidence</p><p id="r-ev-text"></p></div>
+  <div class="card" id="r-hint" hidden></div>
+  <div class="timer"><span class="t" id="t">0:00</span><button class="btn small" id="t-go">Start timer</button><button class="btn small" id="t-reset">Reset</button></div>
+  <h3>The people at Holly House</h3>
+  <div class="people" id="people"></div>
+  <div class="btns">
+    <button class="btn gold big" id="r-next"></button>
+    <button class="btn" id="r-card">See my card again</button>
+    <button class="btn" id="r-hint-btn" hidden>Stuck? Show a hint</button>
+  </div>
+</div></section></div>
+
+<!-- VOTE -->
+<div data-screen="vote" hidden><section><div class="wrap">
+  <p class="kicker">Secret vote</p>
+  <h2 id="v-h"></h2>
+  <div id="v-pass"><p class="lead">Everyone else, look away.</p><div class="btns"><button class="btn gold big" id="v-ready"></button></div></div>
+  <div id="v-pick" hidden><p class="lead">Who took the star? Tap one person. Nobody will see your vote until the end.</p><div class="who" id="v-list"></div></div>
+</div></section></div>
+
+<!-- REVEAL -->
+<div data-screen="reveal" hidden>
+<section><div class="wrap">
+  <p class="kicker">The truth</p>
+  <h1 id="x-h"></h1>
+  <p class="lead" id="x-hide"></p>
+  <p class="result" id="x-result"></p>
+  <div class="card"><h3 style="margin-top:0">The votes</h3><div id="x-votes"></div></div>
+  <h3>Where everyone really was at 10:30</h3>
+  <table class="truth" id="x-truth"></table>
+  <h3>How you could catch the thief</h3>
+  <ol class="steps" id="x-how"></ol>
+  <div class="btns"><button class="btn gold big" id="again">Play again: new thief</button><button class="btn" id="new-players">New players</button><button class="btn" id="share-end">Send it to another group</button></div>
+  <p class="msg" id="share-msg" style="color:var(--good)" aria-live="polite"></p>
+</div></section>
+</div>
+
+<section><div class="wrap">
+  <div class="promo">
+    <img src="../books/advent-en.jpg" alt="Room &amp; Hour: The Murder Mystery Advent Calendar" width="140" height="210" loading="lazy">
+    <div>
+      <p class="kicker">Liked solving it?</p>
+      <h2>24 more mysteries, one for each day until Christmas Eve</h2>
+      <p class="lead" style="margin-bottom:6px">Room &amp; Hour: The Murder Mystery Advent Calendar. Every case has a floor plan, a clock and one solution you reach by deduction. Solve it alone or as a family.</p>
+      <div class="btns"><a class="btn gold" href="https://www.amazon.com/dp/B0HP7WGW9F" rel="noopener">See the book on Amazon</a><a class="btn" href="../free/">3 free printable cases</a></div>
+    </div>
+  </div>
+</div></section>
+</main>
+<footer><div class="wrap">Made by <a href="../">Room &amp; Hour</a>. Holly House and everyone in it are made up. Your game stays on this phone; nothing is sent anywhere.</div></footer>
+
+<div class="overlay" id="ov" hidden role="dialog" aria-modal="true"><div class="wrap">
+  <div id="ov-ask">
+    <p class="kicker">Secret card</p>
+    <h2 id="ov-name"></h2>
+    <p class="lead">Only you should look now. Turn the phone away from everyone else.</p>
+    <div class="btns"><button class="btn gold big" id="ov-show">Show my card</button><button class="btn" id="ov-cancel">Not me, go back</button></div>
+  </div>
+  <div id="ov-card" class="secret" hidden></div>
+  <div class="btns" id="ov-hide-row" hidden><button class="btn gold big" id="ov-hide">Hide my card and pass the phone</button></div>
+</div></div>
+
+<script src="party.js"></script>
+<script>
+(function () {
+  'use strict';
+  var S = window.StarCase, KEY = 'rh-party-v1', URL_ = 'https://shivamkole1969.github.io/roomandhour/party/';
+  var st = load() || { screen: 'home' }, game = null, timer = null;
+  var $ = function (id) { return document.getElementById(id); };
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function el(tag, attrs, text) { var e = document.createElement(tag); if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; }
+  function ch(i) { return S.charById(game.players[i].cid); }
+  function label(i) { return ch(i).name + ' (' + game.players[i].name + ')'; }
+  function lookOf(i) { return ch(i).look + ', ' + S.TRAITS[game.players[i].trait].look; }
+
+  function show(screen) {
+    st.screen = screen; save();
+    document.querySelectorAll('[data-screen]').forEach(function (d) { d.hidden = d.getAttribute('data-screen') !== screen; });
+    if (screen === 'home') { $('resume-row').hidden = !(st.names && st.round); }
+    if (screen === 'setup') renderSetup();
+    if (screen === 'deal') renderDeal();
+    if (screen === 'round') renderRound();
+    if (screen === 'vote') renderVote();
+    if (screen === 'reveal') renderReveal();
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('[data-go]').forEach(function (b) { b.addEventListener('click', function () { show(b.getAttribute('data-go')); }); });
+
+  // Setup
+  var draft = (st.names && st.names.slice()) || ['', '', '', ''];
+  function renderSetup() {
+    var box = $('names'); box.textContent = '';
+    draft.forEach(function (v, i) {
+      var row = el('div', { 'class': 'row' });
+      var inp = el('input', { type: 'text', maxlength: '16', placeholder: 'Player ' + (i + 1), 'aria-label': 'Player ' + (i + 1) + ' name', autocomplete: 'off' });
+      inp.value = v; inp.addEventListener('input', function () { draft[i] = inp.value; });
+      row.appendChild(inp);
+      if (draft.length > 4) { var x = el('button', { 'class': 'btn x', 'aria-label': 'Remove player' }, '×'); x.addEventListener('click', function () { draft.splice(i, 1); renderSetup(); }); row.appendChild(x); }
+      box.appendChild(row);
+    });
+    $('add').disabled = draft.length >= 8;
+    $('setup-msg').textContent = '';
+  }
+  $('add').addEventListener('click', function () { if (draft.length < 8) { draft.push(''); renderSetup(); var ins = $('names').querySelectorAll('input'); ins[ins.length - 1].focus(); } });
+  $('deal').addEventListener('click', function () {
+    var names = draft.map(function (s) { return s.trim(); }).filter(Boolean);
+    var low = names.map(function (s) { return s.toLowerCase(); });
+    if (names.length < 4) { $('setup-msg').textContent = 'You need at least 4 players.'; return; }
+    if (new Set(low).size !== low.length) { $('setup-msg').textContent = 'Two players have the same name. Add an initial to one of them.'; return; }
+    draft = names.slice(); newGame(names); show('story');
+  });
+  function newGame(names) {
+    st = { screen: 'story', names: names, seed: (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0, seen: names.map(function () { return false; }), round: 1, votes: {}, voter: 0 };
+    game = S.generate(st.names, st.seed); save();
+  }
+
+  // Deal / secret cards
+  var reviewing = false;
+  function renderDeal() {
+    var allSeen = st.seen.every(Boolean);
+    reviewing = allSeen && st.round > 0 && st.started;
+    $('deal-kicker').textContent = reviewing ? 'Your card again · Only you should look' : 'Step 3 of 3 · Pass the phone';
+    $('deal-h').textContent = reviewing ? 'Whose card?' : 'Read your secret card';
+    var box = $('who'); box.textContent = '';
+    st.names.forEach(function (nm, i) {
+      var b = el('button', { 'class': 'btn' }); b.appendChild(el('span', null, nm));
+      if (st.seen[i] && !reviewing) b.appendChild(el('span', { 'class': 'seen' }, '✓ read'));
+      b.addEventListener('click', function () { openCard(i); });
+      box.appendChild(b);
+    });
+    $('deal-next').disabled = !allSeen;
+    $('deal-next').textContent = reviewing ? 'Back to the game' : (allSeen ? 'Everyone has read their card: start' : 'Waiting for everyone to read their card');
+  }
+  $('deal-next').addEventListener('click', function () { st.started = true; show('round'); });
+  var openIdx = -1;
+  function openCard(i) {
+    openIdx = i; $('ov-name').textContent = st.names[i] + ', is that you?';
+    $('ov-ask').hidden = false; $('ov-card').hidden = true; $('ov-hide-row').hidden = true; $('ov').hidden = false; $('ov').scrollTop = 0;
+  }
+  $('ov-cancel').addEventListener('click', function () { $('ov').hidden = true; });
+  $('ov-show').addEventListener('click', function () {
+    var box = $('ov-card'); box.textContent = ''; fillCard(box, openIdx);
+    $('ov-ask').hidden = true; box.hidden = false; $('ov-hide-row').hidden = false; $('ov').scrollTop = 0;
+  });
+  $('ov-hide').addEventListener('click', function () {
+    st.seen[openIdx] = true; save(); $('ov').hidden = true; $('ov-card').textContent = ''; renderDeal();
+  });
+  function add(box, tag, text, cls) { var e = el(tag, cls ? { 'class': cls } : null, text); box.appendChild(e); return e; }
+  function fillCard(box, i) {
+    var c = ch(i), p = game.players[i], tr = S.TRAITS[p.trait], thief = i === game.thief;
+    add(box, 'p', 'You are', 'kicker'); add(box, 'h2', c.name); add(box, 'p', c.role, 'role');
+    add(box, 'div', thief ? 'YOU TOOK THE STAR' : 'You did NOT take the star', 'badge ' + (thief ? 'bad' : 'good'));
+    if (thief) {
+      add(box, 'h3', 'What really happened');
+      add(box, 'p', 'At 10:30, when the lights went out, you grabbed the star from the tree and hid it ' + game.hide + '. Nobody saw you.');
+      add(box, 'h3', 'Your cover story');
+      add(box, 'p', 'Say you were in the ' + game.claim + ', ' + S.ROOMS[game.claim].doing + '. You may lie about anything, but keep your story simple.');
+      add(box, 'p', 'Careful: the Library and Study have glass doors, the Kitchen has a hatch into the Dining Room, and the Music Room has a big window onto the Conservatory. Someone may have seen into the room you name.', 'muted');
+    } else {
+      add(box, 'h3', 'At 10:30 you were');
+      var r = game.at[i], mates = game.occ[r].filter(function (j) { return j !== i; }).map(function (j) { return ch(j).name; });
+      add(box, 'p', 'In the ' + r + (mates.length ? ' with ' + S.listNames(mates) : ', on your own') + ', ' + S.ROOMS[r].doing + '.');
+      add(box, 'h3', 'What you know');
+      var ul = add(box, 'ul'); p.clues.forEach(function (t) { add(ul, 'li', t); });
+    }
+    add(box, 'h3', 'How you look');
+    add(box, 'p', c.look.charAt(0).toUpperCase() + c.look.slice(1) + ', and ' + tr.look + ': ' + tr.why + (thief ? '. That is your excuse if anyone asks.' : '.'));
+    add(box, 'h3', 'Your secret (share it or keep it)');
+    add(box, 'p', c.secret);
+    add(box, 'h3', 'Your goal');
+    add(box, 'p', thief ? 'Make the group vote for someone else. If anyone but you gets the most votes, you win.'
+                        : 'Find the thief. Tell the truth about where you were and what you saw: the clues only work when innocent people share them.');
+  }
+
+  // Rounds
+  var ROUNDS = {
+    1: { k: 'Round 1 of 3', h: 'Where were you at 10:30?', lead: "Go round the table. Read out your character's name, look and line below, then say where you were at 10:30 and who with.", secs: 240, next: 'Next: the evidence' },
+    2: { k: 'Round 2 of 3', h: 'The evidence', lead: "Read the evidence aloud. Then share what you know: who could you see, who was with you, what proves where you were? Look closely at everyone's look.", secs: 360, next: 'Next: last questions' },
+    3: { k: 'Round 3 of 3', h: 'Last questions', lead: 'Each suspect gets one minute to defend themselves. Ask them who can vouch for them. Then vote.', secs: 180, next: 'Go to the secret vote' }
+  };
+  function renderRound() {
+    var R = ROUNDS[st.round] || ROUNDS[1];
+    $('r-kicker').textContent = R.k; $('r-h').textContent = R.h; $('r-lead').textContent = R.lead; $('r-next').textContent = R.next;
+    $('r-ev').hidden = st.round < 2; $('r-ev-text').textContent = S.TRAITS[game.ev].evidence;
+    $('r-hint').hidden = true; $('r-hint-btn').hidden = st.round < 3;
+    var box = $('people'); box.textContent = '';
+    game.players.forEach(function (p, i) {
+      var d = el('div', { 'class': 'person' });
+      d.appendChild(el('b', null, ch(i).name)); d.appendChild(document.createTextNode(' '));
+      d.appendChild(el('span', { 'class': 'p' }, 'played by ' + p.name + ' · ' + ch(i).role));
+      d.appendChild(el('div', { 'class': 'look' }, 'Look: ' + lookOf(i)));
+      if (st.round === 1) d.appendChild(el('q', null, ch(i).intro));
+      box.appendChild(d);
+    });
+    resetTimer(R.secs);
+  }
+  $('r-next').addEventListener('click', function () {
+    stopTimer();
+    if (st.round < 3) { st.round++; save(); renderRound(); window.scrollTo(0, 0); }
+    else { st.votes = {}; st.voter = 0; show('vote'); }
+  });
+  $('r-card').addEventListener('click', function () { stopTimer(); show('deal'); });
+  $('r-hint-btn').addEventListener('click', function () {
+    var h = $('r-hint'); h.textContent = '';
+    add(h, 'p', 'Hint: only a few people match the evidence. The thief is the one among them that no innocent player can vouch for at 10:30. For each suspect, ask: who was with you, who could see you, or what proves where you were? Then check the room they named: did anyone see into it?');
+    h.hidden = false;
+  });
+
+  // Timer
+  var left = 0, running = false;
+  function fmt(s) { return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+  function resetTimer(s) { stopTimer(); left = s; $('t').textContent = fmt(left); $('t').className = 't'; $('t-go').textContent = 'Start timer'; }
+  function stopTimer() { if (timer) clearInterval(timer); timer = null; running = false; }
+  $('t-go').addEventListener('click', function () {
+    if (running) { stopTimer(); $('t-go').textContent = 'Resume'; return; }
+    if (left <= 0) return;
+    running = true; $('t-go').textContent = 'Pause';
+    timer = setInterval(function () {
+      left--; $('t').textContent = fmt(Math.max(0, left));
+      if (left <= 0) { stopTimer(); $('t').className = 't done'; $('t-go').textContent = 'Time!'; try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {} }
+    }, 1000);
+  });
+  $('t-reset').addEventListener('click', function () { resetTimer((ROUNDS[st.round] || ROUNDS[1]).secs); });
+
+  // Vote
+  function renderVote() {
+    var v = st.voter, nm = st.names[v];
+    $('v-h').textContent = 'Pass the phone to ' + nm;
+    $('v-ready').textContent = "I'm " + nm + ': vote';
+    $('v-pass').hidden = false; $('v-pick').hidden = true;
+    var box = $('v-list'); box.textContent = '';
+    game.players.forEach(function (p, i) {
+      var b = el('button', { 'class': 'btn' }, label(i));
+      b.addEventListener('click', function () {
+        st.votes[v] = i; st.voter++; save();
+        if (st.voter >= st.names.length) show('reveal'); else { renderVote(); window.scrollTo(0, 0); }
+      });
+      box.appendChild(b);
+    });
+  }
+  $('v-ready').addEventListener('click', function () { $('v-pass').hidden = true; $('v-pick').hidden = false; });
+
+  // Reveal
+  function renderReveal() {
+    var T = game.thief, tally = game.players.map(function () { return 0; });
+    Object.keys(st.votes).forEach(function (k) { tally[st.votes[k]]++; });
+    var max = Math.max.apply(null, tally), top = tally.map(function (c, i) { return c === max ? i : -1; }).filter(function (i) { return i >= 0; });
+    var caught = top.length === 1 && top[0] === T;
+    $('x-h').textContent = ch(T).name + ' took the star!';
+    $('x-hide').textContent = 'Played by ' + game.players[T].name + '. The star was hidden ' + game.hide + '.';
+    $('x-result').textContent = caught ? 'Caught! The detectives win.' : (top.indexOf(T) >= 0 ? 'A tie, so the thief slips away. The thief wins.' : 'The thief fooled you all. The thief wins.');
+    $('x-result').className = 'result ' + (caught ? 'good' : 'bad');
+    var vb = $('x-votes'); vb.textContent = '';
+    tally.map(function (c, i) { return [c, i]; }).filter(function (a) { return a[0] > 0; }).sort(function (a, b) { return b[0] - a[0]; })
+      .forEach(function (a) { add(vb, 'div', label(a[1]) + ': ' + a[0] + (a[0] === 1 ? ' vote' : ' votes')); });
+    var tb = $('x-truth'); tb.textContent = '';
+    var tr = el('tr', { 'class': 'hall' }); tr.appendChild(el('td', null, S.HALL)); tr.appendChild(el('td', null, ch(T).name + ', taking the star')); tb.appendChild(tr);
+    S.ROOM_NAMES.forEach(function (r) {
+      var o = game.occ[r], row = el('tr');
+      row.appendChild(el('td', null, r));
+      row.appendChild(el('td', null, o.length ? S.listNames(o.map(function (j) { return ch(j).name; })) : 'Nobody'));
+      tb.appendChild(row);
+    });
+    var how = $('x-how'); how.textContent = '';
+    var holders = [T].concat(game.decoys).map(function (j) { return ch(j).name; }).sort();
+    add(how, 'li', 'The evidence pointed to ' + S.TRAITS[game.ev].look + '. Only ' + S.listNames(holders) + ' had that.');
+    game.decoys.forEach(function (j) { add(how, 'li', ch(j).name + ' ' + game.vouch[j] + ', so they are cleared.'); });
+    var rooms = S.ROOM_NAMES.map(function (r) { return r + ': ' + game.checks[r]; });
+    var li = add(how, 'li', 'Nobody could vouch for ' + ch(T).name + '. Whatever room they named, an innocent player could disprove it:');
+    var ul = el('ul'); rooms.forEach(function (t) { add(ul, 'li', t); }); li.appendChild(ul);
+  }
+  $('again').addEventListener('click', function () { newGame(st.names); show('story'); });
+  $('new-players').addEventListener('click', function () { draft = st.names.slice(); show('setup'); });
+
+  // Share
+  function share(msgEl) {
+    var text = 'A free Christmas mystery party game on one phone: 4 to 8 players, 30 minutes, nothing to print. One of us is the thief.';
+    if (navigator.share) { navigator.share({ title: 'Who Took the Christmas Star?', text: text, url: URL_ }).catch(function () {}); return; }
+    var done = function () { if (msgEl) msgEl.textContent = 'Link copied. Paste it into your group chat.'; };
+    if (navigator.clipboard) navigator.clipboard.writeText(text + ' ' + URL_).then(done, function () {}); else done();
+  }
+  $('share-top').addEventListener('click', function () { share(null); });
+  $('share-end').addEventListener('click', function () { share($('share-msg')); });
+  $('resume').addEventListener('click', function (e) { e.preventDefault(); show(st.lastScreen || 'round'); });
+
+  // Boot
+  if (st.names && st.seed != null) {
+    try { game = S.generate(st.names, st.seed); } catch (e) { st = { screen: 'home' }; }
+  }
+  var start = st.screen || 'home';
+  if (!game && start !== 'home' && start !== 'setup') start = 'home';
+  if (start !== 'home' && start !== 'setup') { st.lastScreen = start; start = 'home'; }
+  show(start);
+})();
+</script>
+</body>
+</html>
