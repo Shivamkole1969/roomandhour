@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B0F19">
+<title>Hidden 3D Message Maker: Send a Word Only Both Eyes Can Read (Free)</title>
+<meta name="description" content="Free and no sign-up: type a word, hide it in random dots and send it to a friend as a challenge. One eye sees noise; both eyes together read your message. Download it as a Christmas card or birthday card.">
+<link rel="canonical" href="https://shivamkole1969.github.io/roomandhour/hidden-card/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Room &amp; Hour">
+<meta property="og:title" content="Can you read my hidden message? Only both eyes can.">
+<meta property="og:description" content="A free hidden 3D message maker. Hide a word in random dots and send it as a challenge.">
+<meta property="og:url" content="https://shivamkole1969.github.io/roomandhour/hidden-card/">
+<meta property="og:image" content="https://shivamkole1969.github.io/roomandhour/img/hidden-card-og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%230B0F19'/%3E%3Ccircle cx='13' cy='20' r='5' fill='%23FFD700'/%3E%3Ccircle cx='27' cy='20' r='5' fill='%2338BDF8'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #0B0F19; --panel: #131B2C; --panel2: #18223A; --line: rgba(255,255,255,.08); --line2: rgba(255,255,255,.16);
+  --text: #E7ECF5; --muted: #8E9AB2; --gold: #FFD700; --sky: #38BDF8; --good: #4ADE80; --bad: #FB7185;
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font: 16px/1.55 var(--sans);
+  background-image: radial-gradient(40rem 28rem at 10% -8%, rgba(56,189,248,.10), transparent 62%),
+                    radial-gradient(36rem 30rem at 110% 105%, rgba(255,215,0,.07), transparent 60%); }
+a { color: var(--sky); }
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+header.top { border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; }
+.brand { font-family: var(--serif); font-weight: 700; color: var(--gold); text-decoration: none; font-size: 1.2rem; }
+header.top nav a { color: var(--muted); text-decoration: none; font-size: .92rem; margin-left: 14px; }
+header.top nav a:hover { color: var(--text); }
+section { padding: 28px 0; }
+section + section { border-top: 1px solid var(--line); }
+.kicker { margin: 0 0 6px; color: var(--sky); font-weight: 700; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
+h1 { margin: 0 0 10px; font-family: var(--serif); font-size: clamp(1.7rem, 6vw, 2.5rem); line-height: 1.12; }
+h2 { margin: 0 0 10px; font-family: var(--serif); font-size: 1.45rem; line-height: 1.2; }
+.lead { margin: 0 0 18px; color: #C9D2E3; font-size: 1.05rem; max-width: 40rem; }
+.card { background: var(--panel); border: 1px solid var(--line2); border-radius: 16px; padding: 16px; }
+.stage { background: #070A12; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.stage canvas { display: block; max-width: 100%; height: auto; margin: 0 auto; image-rendering: pixelated; }
+.stage .hint { margin: 10px 0 0; color: var(--muted); font-size: .86rem; text-align: center; }
+.maker { display: grid; gap: 16px; }
+@media (min-width: 760px) { .maker { grid-template-columns: 300px 1fr; align-items: start; } }
+label.f { display: block; margin-bottom: 14px; font-weight: 600; font-size: .92rem; }
+label.f small { color: var(--muted); font-weight: 400; }
+input[type=text] { display: block; width: 100%; margin-top: 6px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line2);
+  background: var(--panel2); color: var(--text); font: 600 1.05rem var(--sans); letter-spacing: .04em; }
+input[type=text]:focus { outline: 2px solid var(--sky); outline-offset: 1px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { border: 1px solid var(--line2); background: var(--panel2); color: var(--text); border-radius: 999px; padding: 8px 14px; font: 600 .9rem var(--sans); cursor: pointer; }
+.chip[aria-checked=true] { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,.08); }
+.peek { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 10px; color: var(--muted); font-size: .88rem; cursor: pointer; }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border-radius: 12px;
+  border: 1px solid var(--line2); background: var(--panel2); color: var(--text); font: 700 .98rem var(--sans); text-decoration: none; cursor: pointer; }
+.btn:hover { border-color: var(--sky); }
+.btn.gold { background: var(--gold); color: #1A1400; border-color: var(--gold); }
+.btn.big { min-height: 52px; font-size: 1.05rem; flex: 1 1 100%; }
+@media (min-width: 520px) { .btn.big { flex: 0 1 auto; } }
+.msg { min-height: 1.4em; margin: 10px 0 0; font-weight: 600; }
+.msg.good { color: var(--good); } .msg.bad { color: var(--bad); }
+.guess { display: flex; gap: 10px; margin-top: 16px; }
+.guess input { margin: 0; flex: 1; min-width: 0; text-transform: uppercase; }
+.win { margin-top: 16px; border-color: rgba(74,222,128,.5); }
+.win h2 { color: var(--good); }
+ol.steps { margin: 0; padding-left: 1.3rem; }
+ol.steps li { margin: 0 0 8px; }
+ul.tips { margin: 12px 0 0; padding-left: 1.2rem; color: #C9D2E3; }
+.promo { display: grid; gap: 16px; align-items: center; }
+@media (min-width: 620px) { .promo { grid-template-columns: 150px 1fr; } }
+.promo img { width: 150px; height: auto; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.45); }
+.muted { color: var(--muted); font-size: .9rem; }
+footer { padding: 26px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="../">Room &amp; Hour</a>
+<nav><a href="../free/">Free murder mysteries</a><a href="../play/">Play online</a></nav></div></header>
+<main>
+
+<section id="recv" hidden><div class="wrap">
+  <p class="kicker">A hidden message</p>
+  <h1 id="r-title">Someone sent you a hidden message</h1>
+  <p class="lead">It's hidden in the dots. One eye sees only noise. Use both eyes and the words float out of the picture.</p>
+  <div class="stage"><canvas id="r-canvas" aria-label="Two panels of random dots that hide a message"></canvas>
+    <p class="hint">Hold a finger halfway to the screen and look at it until the two dots on top become three. Then let the middle picture sharpen.</p></div>
+  <form id="r-form" class="guess" autocomplete="off"><input type="text" id="r-guess" placeholder="What does it say?" aria-label="Your answer" autocapitalize="characters" spellcheck="false"><button class="btn gold" type="submit">Check</button></form>
+  <p id="r-msg" class="msg" aria-live="polite"></p>
+  <div class="btns"><button class="btn" id="r-peek" type="button" hidden>Show me the answer</button><a class="btn" href="./">Make your own</a></div>
+  <div class="card win" id="r-win" hidden>
+    <h2 id="r-win-h">You read it!</h2>
+    <p>The hidden message was <b id="r-word"></b>. Now hide one for them.</p>
+    <div class="btns"><a class="btn gold" href="./">Send one back</a></div>
+  </div>
+</div></section>
+
+<section id="make"><div class="wrap">
+  <p class="kicker">Free, no sign-up, works on your phone</p>
+  <h1>Hide a message only both eyes can read</h1>
+  <p class="lead">Type a word. It gets hidden in random dots. Send it to a friend and see if they can read it, or download it as a card.</p>
+  <div class="maker">
+    <div class="card">
+      <label class="f">Secret word <small>(up to 14 letters)</small><input type="text" id="m-word" maxlength="14" value="JOY" autocapitalize="characters" spellcheck="false"></label>
+      <label class="f">Your name <small>(optional, shown openly)</small><input type="text" id="m-from" maxlength="24" placeholder="e.g. Grandma"></label>
+      <div class="f" style="font-weight:600;font-size:.92rem">Style
+        <div class="chips" role="radiogroup" aria-label="Card style" id="m-themes"></div></div>
+      <p class="muted" style="margin:14px 0 0">Short words with big letters are easiest to read. Everything happens in your browser: your word is scrambled into the link, and nothing is stored on a server.</p>
+    </div>
+    <div>
+      <div class="stage"><canvas id="m-canvas" aria-label="Preview of your hidden message"></canvas>
+        <label class="peek"><input type="checkbox" id="m-peek"> Peek at the hidden word</label></div>
+      <div class="btns">
+        <button class="btn gold big" id="m-share" type="button">Send as a challenge</button>
+        <button class="btn" id="m-copy" type="button">Copy link</button>
+        <button class="btn" id="m-png" type="button">Download card</button>
+        <button class="btn" id="m-new" type="button">New dots</button>
+      </div>
+      <p id="m-msg" class="msg" aria-live="polite"></p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>How to see it</h2>
+  <ol class="steps">
+    <li>Hold the picture level, about an arm's length away.</li>
+    <li>Put a finger halfway between your eyes and the screen, and look at the fingertip.</li>
+    <li>Behind your finger, the two dots on top turn into three. Keep your eyes there, and the middle picture sharpens into the hidden word.</li>
+  </ol>
+  <ul class="tips">
+    <li>Can't get it? Move your finger a little closer or farther, or move the phone.</li>
+    <li>If your eyes feel strained, stop and blink. It gets easier with practice.</li>
+  </ul>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Why it works</h2>
+  <p>This is a random-dot stereogram, an idea from vision scientist Béla Julesz at Bell Labs around 1960. Each panel on its own is pure noise. In the second panel, the dots that form your word are moved a few dots to the side. When each eye looks at a different panel, your brain matches the dots, and the shifted patch appears at a different depth: your word. <a href="https://en.wikipedia.org/wiki/Random_dot_stereogram" rel="noopener">Read more</a>.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="promo">
+    <img src="../books/advent-en.jpg" alt="Room &amp; Hour: The Murder Mystery Advent Calendar" width="150" height="225" loading="lazy">
+    <div>
+      <p class="kicker">Like puzzles?</p>
+      <h2>24 murder mysteries, one for each day until Christmas Eve</h2>
+      <p class="lead" style="margin-bottom:6px">Room &amp; Hour: The Murder Mystery Advent Calendar. Every case comes with a floor plan, a clock and one solution you reach by deduction.</p>
+      <div class="btns"><a class="btn gold" href="https://www.amazon.com/dp/B0HP7WGW9F" rel="noopener">See the book on Amazon</a><a class="btn" href="../free/">3 free printable cases</a></div>
+    </div>
+  </div>
+</div></section>
+
+</main>
+<footer><div class="wrap">Made by <a href="../">Room &amp; Hour</a>. More brain tests on <a href="https://www.youtube.com/channel/UC0mb3-5hzpCqAmbPNV-ZsMw" rel="noopener">YouTube</a>. Some people can't see stereograms at all, and that's normal.</div></footer>
+
+<script>
+(() => {
+  'use strict';
+  const N = 80, SHIFT = 4, KEY = 'roomandhour';
+  const SITE = 'shivamkole1969.github.io/roomandhour/hidden-card/';
+  const THEMES = {
+    xmas:     { label: 'Christmas', bg: '#0B0F19', ink: '#FFD700', dots: ['#14532D', '#DC2626', '#F8FAFC', '#FFD700', '#0B0F19', '#22C55E'] },
+    winter:   { label: 'Winter',    bg: '#0B1220', ink: '#A5F3FC', dots: ['#0B1220', '#38BDF8', '#F8FAFC', '#1E3A8A', '#A5F3FC', '#0B1220'] },
+    birthday: { label: 'Birthday',  bg: '#140B19', ink: '#F472B6', dots: ['#140B19', '#F472B6', '#FFD700', '#38BDF8', '#4ADE80', '#F8FAFC'] },
+    classic:  { label: 'Classic',   bg: '#0B0F19', ink: '#FFD700', dots: ['#0F172A', '#FFD700', '#38BDF8', '#F8FAFC', '#F43F5E', '#0F172A'] },
+  };
+  const $ = id => document.getElementById(id);
+
+  // ---------- word handling
+  const clean = s => (s || '').toUpperCase().replace(/[^A-Z0-9ÄÖÜÉÈÀÑ !?&'\-]/g, '').replace(/\s+/g, ' ').slice(0, 14);
+  const norm = s => (s || '').toUpperCase().replace(/[^A-Z0-9ÄÖÜÉÈÀÑ]/g, '');
+  function lines(word) {
+    const w = word.trim();
+    if (w.length <= 7 || !w.includes(' ')) return [w];
+    let best = null;
+    for (let i = 0; i < w.length; i++) if (w[i] === ' ') {
+      const score = Math.max(i, w.length - i - 1);
+      if (!best || score < best.score) best = { i, score };
+    }
+    return [w.slice(0, best.i), w.slice(best.i + 1)];
+  }
+
+  // ---------- link payload: scrambled so the word isn't readable in the link
+  function enc(o) {
+    const b = new TextEncoder().encode(JSON.stringify(o));
+    let s = '';
+    b.forEach((v, i) => { s += String.fromCharCode(v ^ KEY.charCodeAt(i % KEY.length)); });
+    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  function dec(t) {
+    try {
+      t = t.replace(/-/g, '+').replace(/_/g, '/');
+      while (t.length % 4) t += '=';
+      const s = atob(t);
+      const b = Uint8Array.from(s, (c, i) => c.charCodeAt(0) ^ KEY.charCodeAt(i % KEY.length));
+      const o = JSON.parse(new TextDecoder().decode(b));
+      const w = clean(String(o.w || ''));
+      if (!norm(w)) return null;
+      return { w, f: String(o.f || '').slice(0, 24), t: THEMES[o.t] ? o.t : 'xmas', s: (Number(o.s) >>> 0) || 1 };
+    } catch (e) { return null; }
+  }
+
+  // ---------- stereogram
+  function rng(seed) {
+    let a = seed >>> 0;
+    return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+  function mask(word) {
+    const c = document.createElement('canvas'); c.width = c.height = N;
+    const x = c.getContext('2d');
+    x.fillStyle = '#000'; x.fillRect(0, 0, N, N); x.fillStyle = '#fff';
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    const ls = lines(word), two = ls.length > 1;
+    const font = s => `900 ${s}px "Arial Black", "Arial Bold", Arial, sans-serif`;
+    let size = Math.round(N * (two ? 0.36 : 0.52));
+    for (; size > 8; size--) {
+      x.font = font(size);
+      if (Math.max(...ls.map(l => x.measureText(l).width)) <= N * 0.84) break;
+    }
+    x.font = font(size);
+    const lh = size * 1.08, y0 = N / 2 - (ls.length - 1) * lh / 2 + size * 0.04;
+    ls.forEach((l, i) => x.fillText(l, N / 2 - SHIFT / 2, y0 + i * lh));
+    const d = x.getImageData(0, 0, N, N).data, m = new Uint8Array(N * N);
+    for (let i = 0; i < N * N; i++) m[i] = d[i * 4] > 110 ? 1 : 0;
+    for (let y = 0; y < N; y++) for (let k = N - SHIFT; k < N; k++) m[y * N + k] = 0;
+    return m;
+  }
+  function pair(m, seed, k) {
+    const r = rng(seed), base = new Uint8Array(N * N), right = new Uint8Array(N * N);
+    for (let i = 0; i < N * N; i++) base[i] = Math.floor(r() * k);
+    right.set(base);
+    for (let i = 0; i < N * N; i++) if (m[i]) right[i] = Math.floor(r() * k);   // the strip the word uncovers gets fresh dots
+    for (let i = 0; i < N * N; i++) if (m[i]) right[i + SHIFT] = base[i];       // the word itself moves right by SHIFT dots
+    return { base, right };
+  }
+  const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  function panel(arr, theme, reveal) {
+    const c = document.createElement('canvas'); c.width = c.height = N;
+    const x = c.getContext('2d'), img = x.createImageData(N, N), pal = theme.dots.map(hex);
+    for (let i = 0; i < N * N; i++) {
+      let [R, G, B] = pal[arr[i]];
+      if (reveal) { if (reveal[i]) { R = 74; G = 222; B = 128; } else { R = R * .22 | 0; G = G * .22 | 0; B = B * .22 | 0; } }
+      img.data[i * 4] = R; img.data[i * 4 + 1] = G; img.data[i * 4 + 2] = B; img.data[i * 4 + 3] = 255;
+    }
+    x.putImageData(img, 0, 0);
+    return c;
+  }
+  function build(card, peek) {
+    const theme = THEMES[card.t], m = mask(card.w), p = pair(m, card.s, theme.dots.length);
+    return { theme, left: panel(p.base, theme, peek ? m : null), right: panel(p.right, theme) };
+  }
+  function drawStage(cv, card, peek) {
+    const b = build(card, peek), dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const W = Math.max(240, Math.min(560, Math.round(cv.parentElement.clientWidth - 28)));   // panels close enough to merge
+    const gap = Math.round(W * 0.035), P = Math.floor((W - gap) / 2), top = Math.round(P * 0.18), H = top + P;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cv.style.width = W + 'px'; cv.style.aspectRatio = `${W} / ${H}`;
+    const x = cv.getContext('2d');
+    x.setTransform(dpr, 0, 0, dpr, 0, 0); x.imageSmoothingEnabled = false;
+    x.fillStyle = '#070A12'; x.fillRect(0, 0, W, H);
+    x.drawImage(b.left, 0, top, P, P); x.drawImage(b.right, P + gap, top, P, P);
+    x.fillStyle = b.theme.ink;
+    for (const cx of [P / 2, P + gap + P / 2]) { x.beginPath(); x.arc(cx, top / 2, Math.max(4, P * 0.03), 0, 7); x.fill(); }
+  }
+  function exportPng(card) {
+    const b = build(card, false), W = 1200, H = 1060, P = 520, gap = 40, x0 = 60, top = 250;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    x.fillStyle = b.theme.bg; x.fillRect(0, 0, W, H);
+    x.textAlign = 'center'; x.fillStyle = b.theme.ink;
+    x.font = '700 56px Georgia, serif'; x.fillText('Can you read my hidden message?', W / 2, 92);
+    x.fillStyle = '#C9D2E3'; x.font = '600 30px -apple-system, Segoe UI, Arial, sans-serif';
+    x.fillText(card.f ? `From ${card.f}. Only both eyes can read it.` : 'Only both eyes can read it.', W / 2, 146);
+    x.fillStyle = b.theme.ink;
+    for (const cx of [x0 + P / 2, x0 + P + gap + P / 2]) { x.beginPath(); x.arc(cx, 205, 13, 0, 7); x.fill(); }
+    x.imageSmoothingEnabled = false;
+    x.drawImage(b.left, x0, top, P, P); x.drawImage(b.right, x0 + P + gap, top, P, P);
+    x.fillStyle = '#C9D2E3'; x.font = '500 27px -apple-system, Segoe UI, Arial, sans-serif';
+    ['Hold a finger halfway to the picture and look at it.', 'The two dots on top become three: now let the middle picture sharpen.']
+      .forEach((t, i) => x.fillText(t, W / 2, top + P + 60 + i * 40));
+    x.fillStyle = b.theme.ink; x.font = '700 26px -apple-system, Segoe UI, Arial, sans-serif';
+    x.fillText('Make your own free: ' + SITE, W / 2, H - 40);
+    return new Promise(res => c.toBlob(res, 'image/png'));
+  }
+
+  // ---------- receive mode
+  const hashCard = (location.hash.match(/[#&]m=([\w-]+)/) || [])[1];
+  const got = hashCard ? dec(hashCard) : null;
+  if (got) {
+    $('recv').hidden = false;
+    document.title = (got.f ? `${got.f} sent you a hidden message` : 'You got a hidden message') + ' | Room & Hour';
+    $('r-title').textContent = got.f ? `${got.f} sent you a hidden message` : 'Someone sent you a hidden message';
+    $('make').querySelector('h1').textContent = 'Now hide one of your own';
+    const draw = peek => drawStage($('r-canvas'), got, peek);
+    draw(false);
+    let tries = 0, solved = false;
+    addEventListener('resize', () => draw(solved));
+    const win = () => { solved = true; draw(true); $('r-word').textContent = got.w; $('r-win').hidden = false; $('r-form').hidden = true; $('r-peek').hidden = true; $('r-msg').textContent = ''; };
+    $('r-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const g = norm($('r-guess').value);
+      if (!g) return;
+      if (g === norm(got.w)) { win(); return; }
+      tries++;
+      $('r-msg').className = 'msg bad';
+      $('r-msg').textContent = tries < 2 ? 'Not quite. Keep your eyes on the middle picture and let it sharpen.' : 'Not yet. Try again, or see the answer.';
+      if (tries >= 2) $('r-peek').hidden = false;
+    });
+    $('r-peek').addEventListener('click', () => { win(); $('r-win-h').textContent = 'Here it is'; });
+  }
+
+  // ---------- make mode
+  const state = { w: 'JOY', f: '', t: 'xmas', s: (Math.random() * 2 ** 32) >>> 0 };
+  const chips = $('m-themes');
+  Object.entries(THEMES).forEach(([k, th]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = th.label; b.setAttribute('role', 'radio'); b.dataset.t = k;
+    b.addEventListener('click', () => { state.t = k; syncChips(); redraw(); });
+    chips.appendChild(b);
+  });
+  const syncChips = () => chips.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-checked', String(b.dataset.t === state.t)));
+  syncChips();
+  const redraw = () => drawStage($('m-canvas'), { ...state, w: state.w || 'JOY' }, $('m-peek').checked);
+  let timer = 0;
+  $('m-word').addEventListener('input', () => { state.w = clean($('m-word').value); clearTimeout(timer); timer = setTimeout(redraw, 120); });
+  $('m-from').addEventListener('input', () => { state.f = $('m-from').value.trim().slice(0, 24); });
+  $('m-peek').addEventListener('change', redraw);
+  $('m-new').addEventListener('click', () => { state.s = (Math.random() * 2 ** 32) >>> 0; redraw(); });
+  addEventListener('resize', () => { clearTimeout(timer); timer = setTimeout(redraw, 150); });
+  redraw();
+
+  const say = (t, ok = true) => { $('m-msg').className = 'msg ' + (ok ? 'good' : 'bad'); $('m-msg').textContent = t; };
+  const ready = () => { if (!norm(state.w)) { say('Type a word first.', false); return false; } return true; };
+  const link = () => location.origin + location.pathname + '#m=' + enc({ w: state.w.trim(), f: state.f, t: state.t, s: state.s });
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch (e) {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+      ta.remove(); return ok;
+    }
+  }
+  $('m-copy').addEventListener('click', async () => {
+    if (!ready()) return;
+    say(await copy(link()) ? 'Link copied. Paste it to a friend and ask them what it says.' : 'Copying was blocked. Use "Send as a challenge" instead.', true);
+  });
+  $('m-share').addEventListener('click', async () => {
+    if (!ready()) return;
+    const url = link(), text = 'Can you read my hidden message? Only both eyes can.';
+    if (navigator.share) {
+      try { await navigator.share({ title: 'A hidden message for you', text, url }); say('Sent! Now wait for their answer.'); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    say(await copy(text + ' ' + url) ? 'Challenge copied. Paste it into any chat.' : 'Sharing was blocked. Use "Copy link" instead.', true);
+  });
+  $('m-png').addEventListener('click', async () => {
+    if (!ready()) return;
+    const blob = await exportPng(state);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'hidden-message.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    say('Card downloaded. Print it, post it or send it.');
+  });
+})();
+</script>
+</body>
+</html>
