@@ -148,6 +148,7 @@ svg { display: block; }
 
 /* ------------------------------------------------------------------ case screen */
 .cs { position: absolute; inset: 0; display: grid; gap: 0.7rem; padding: calc(0.6rem + var(--safe-t)) 0.7rem calc(0.7rem + var(--safe-b)); animation: fadein 0.25s ease both; }
+.cs.L3, .cs.L2 { max-width: 200vh; margin: 0 auto; }   /* very wide windows: never wider than 2:1, margins instead of a stretched strip */
 .topbar { grid-area: top; display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
 .topbar .ttl { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .topbar .ttl b { font-family: var(--serif); font-size: 1.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -369,6 +370,10 @@ svg { display: block; }
   .hero { grid-template-columns: 1fr; }
   .brand h1 { font-size: 2rem; }
   .grid-cases { grid-template-columns: 1fr; }
+  .home-head { flex-wrap: wrap; gap: 0.75rem; }
+  .home-head .brand { flex: 1 1 calc(100% - 4rem); }   /* full row on the home screen; beside the back button on the calendar */
+  .home-head .head-btns { width: 100%; flex-wrap: wrap; }
+  .home-head .langsw { margin-right: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001s !important; animation-delay: 0s !important; transition-duration: 0.001s !important; }
@@ -377,7 +382,9 @@ svg { display: block; }
 
 /* ------------------------------------------------------------------ language switch, advent calendar, book panel */
 .langsw { display: inline-flex; gap: 0.15rem; padding: 0.2rem; background: var(--panel); border: 1px solid var(--line); border-radius: 0.7rem; align-self: center; }
-.langsw button { min-width: 2.1rem; height: 1.9rem; padding: 0 0.4rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.74rem; letter-spacing: 0.06em; color: var(--muted); }
+.langsw button { min-width: 2.1rem; height: 1.9rem; padding: 0 0.5rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.74rem; letter-spacing: 0.01em; color: var(--muted); }
+.langsw .globe { display: inline-flex; align-items: center; padding: 0 0.15rem 0 0.3rem; color: var(--faint); }
+.langsw .globe svg { width: 0.95rem; height: 0.95rem; }
 .langsw button.on { background: var(--panel2); color: var(--gold); box-shadow: inset 0 0 0 1px var(--line2); }
 .head-btns { align-items: center; }
 .advent-card { width: 100%; display: flex; align-items: center; gap: 0.85rem; padding: 0.8rem 1rem; margin-bottom: 1rem; text-align: left; color: var(--text); transition: border-color 0.15s ease, transform 0.15s ease; }

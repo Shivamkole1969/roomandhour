@@ -6,13 +6,21 @@
 
   var CONFIG = {
     title: 'Room & Hour',                 // working title: change the game's name here only
-    edition: 'web',                       // 'web' (itch.io / own site: share + book links), 'crazygames' or 'gamemonetize' (portals: no links, no promotion); set by package.py
+    edition: 'web',                       // 'web' (itch.io / own site: share + book links) or a portal ('crazygames', 'gamemonetize', 'playgama', ...: no links, no promotion); set by package.py
     testDate: '',                         // 'YYYY-MM-DD' pretends today is that date (also ?date=YYYY-MM-DD); used by tests and screenshots
     crazygames: false,                    // build flag: true loads the CrazyGames SDK v3 (also on with ?crazygames=1)
     crazySdkUrl: 'https://sdk.crazygames.com/crazygames-sdk-v3.js',
     gamemonetize: false,                  // build flag: true loads the GameMonetize SDK (one ad when a case opens, never on a timer)
     gmGameId: '',                         // GameMonetize game ID; set by package.py
     gmSdkUrl: 'https://api.gamemonetize.com/sdk.js',
+    playgama: false,                      // build flag: true waits for the Playgama Bridge (package.py puts its script tag first in <head>) and takes language, saves, pause/audio and ads from it
+    audioFiles: false,                    // true plays the shipped audio/*.mp3 files and a music loop instead of synthesised tones (Playgama: its rules refuse code-made sound); set by package.py
+    kongregate: false,                    // build flag: true loads the Kongregate JS API and submits stats (cases solved etc.) for badges; no ads in the game (Kongregate shows them around it)
+    kongSdkUrl: 'https://cdn1.kongregate.com/javascripts/kongregate_api.js',
+    y8: false,                            // build flag: true loads the Y8 SDK: an ad only when the player opens a case by a click, plus the optional rewarded hint
+    y8AppId: '',                          // Y8 App ID + Game ID (Y8 developer portal > the game > SDK Initialization); set by package.py
+    y8GameId: '',
+    y8SdkUrl: 'https://cdn.y8.com/minimal-sdk/2-0/y8.min.js',
     storageKey: 'roomhour.v1',
     wrongPenalty: 30,                     // seconds added to the clock for a wrong accusation
     version: '1.1.0',
@@ -33,6 +41,7 @@
   // Every UI string lives here. Case texts (title, story, clues ...) stay in cases.json: a case may carry
   // text: { de: {...}, fr: {...} } with the same shape as the English fields; missing parts fall back to English.
   var LANGS = ['en', 'de', 'fr'], LOCALE = { en: 'en-GB', de: 'de-DE', fr: 'fr-FR' };
+  var LANG_NAMES = { en: 'English', de: 'Deutsch', fr: 'Français' };   // each language in its own words (findable without reading the current one)
   var STR = {
     en: {
       tagline: 'Murder-mystery logic puzzles. Three hours, one door at a time.',
@@ -89,7 +98,11 @@
       advent_teaser: 'Door 1 opens on {date}.', advent_wait: 'Until then, play the regular cases.',
       advent_progress: '{n} of 24 doors solved', advent_open_n: 'Doors open: {n} of 24', advent_regular: 'Play the regular cases',
       door_n: 'Door {n}', door_opens: 'Opens {date}', door_locked: 'This door opens on {date}.',
-      next_door: 'Next door', calendar: 'Calendar', door_open_label: 'Door {n}, open', door_done_label: 'Door {n}, solved', door_locked_label: 'Door {n}, locked'
+      next_door: 'Next door', calendar: 'Calendar', door_open_label: 'Door {n}, open', door_done_label: 'Door {n}, solved', door_locked_label: 'Door {n}, locked',
+      back_case: 'Back to the case',
+      hint_q: 'Need a hint?', hint_q_text: 'A hint shows the next step of the deduction. Normal hints lower your star rating for this case.',
+      hint_use: 'Use a hint', hint_ad: 'Watch an ad: hint that costs no star', ad_fail: 'No ad is available right now. You can still use a normal hint.',
+      privacy: 'Privacy: the game has no accounts and collects no personal data. Your progress is saved only on this device or in the game site’s own save system. Any ads come from the game site, under its privacy policy.'
     },
     de: {
       tagline: 'Krimi-Logikrätsel. Drei Stunden, eine Tür nach der anderen.',
@@ -146,7 +159,11 @@
       advent_teaser: 'Türchen 1 öffnet sich am {date}.', advent_wait: 'Bis dahin können Sie die normalen Fälle spielen.',
       advent_progress: '{n} von 24 Türchen gelöst', advent_open_n: 'Offene Türchen: {n} von 24', advent_regular: 'Normale Fälle spielen',
       door_n: 'Türchen {n}', door_opens: 'Öffnet am {date}', door_locked: 'Dieses Türchen öffnet sich am {date}.',
-      next_door: 'Nächstes Türchen', calendar: 'Kalender', door_open_label: 'Türchen {n}, offen', door_done_label: 'Türchen {n}, gelöst', door_locked_label: 'Türchen {n}, verschlossen'
+      next_door: 'Nächstes Türchen', calendar: 'Kalender', door_open_label: 'Türchen {n}, offen', door_done_label: 'Türchen {n}, gelöst', door_locked_label: 'Türchen {n}, verschlossen',
+      back_case: 'Zurück zum Fall',
+      hint_q: 'Brauchen Sie einen Tipp?', hint_q_text: 'Ein Tipp zeigt den nächsten Schritt der Deduktion. Normale Tipps kosten bei diesem Fall Sterne.',
+      hint_use: 'Tipp nehmen', hint_ad: 'Werbung ansehen: Tipp ohne Sternverlust', ad_fail: 'Gerade ist keine Werbung verfügbar. Sie können trotzdem einen normalen Tipp nehmen.',
+      privacy: 'Datenschutz: Das Spiel hat keine Konten und erhebt keine personenbezogenen Daten. Ihr Fortschritt wird nur auf diesem Gerät oder im Speichersystem der Spieleseite gespeichert. Werbung, falls vorhanden, kommt von der Spieleseite und unterliegt deren Datenschutzerklärung.'
     },
     fr: {
       tagline: "Énigmes de logique criminelles. Trois heures, une porte après l'autre.",
@@ -203,7 +220,11 @@
       advent_teaser: 'La case 1 ouvre le {date}.', advent_wait: "D'ici là, jouez les affaires habituelles.",
       advent_progress: '{n} cases sur 24 résolues', advent_open_n: 'Cases ouvertes : {n} sur 24', advent_regular: 'Jouer les affaires habituelles',
       door_n: 'Case {n}', door_opens: 'Ouvre le {date}', door_locked: 'Cette case ouvre le {date}.',
-      next_door: 'Case suivante', calendar: 'Calendrier', door_open_label: 'Case {n}, ouverte', door_done_label: 'Case {n}, résolue', door_locked_label: 'Case {n}, verrouillée'
+      next_door: 'Case suivante', calendar: 'Calendrier', door_open_label: 'Case {n}, ouverte', door_done_label: 'Case {n}, résolue', door_locked_label: 'Case {n}, verrouillée',
+      back_case: "Retour à l'affaire",
+      hint_q: "Besoin d'un indice ?", hint_q_text: "Un indice montre la prochaine étape de la déduction. Les indices normaux font baisser vos étoiles pour cette affaire.",
+      hint_use: 'Prendre un indice', hint_ad: "Regarder une pub : indice sans perte d'étoile", ad_fail: "Aucune publicité n'est disponible pour le moment. Vous pouvez quand même prendre un indice normal.",
+      privacy: "Confidentialité : le jeu n'a pas de compte et ne collecte aucune donnée personnelle. Votre progression est enregistrée uniquement sur cet appareil ou dans le système de sauvegarde du site de jeu. Les publicités éventuelles viennent du site de jeu, selon sa politique de confidentialité."
     }
   };
   /*WEB-STR-BEGIN*/
@@ -441,8 +462,9 @@
   function lvName(l) { return tr('lv_' + l); }
   function setName(x) { return tr('set_' + x); }
   function isWeb() { return CONFIG.edition === 'web' && !wantCrazy(); }
-  function detectLang() {
-    var n = String((window.navigator.languages && window.navigator.languages[0]) || window.navigator.language || 'en').slice(0, 2).toLowerCase();
+  function detectLang() {   // Playgama: only the Bridge's platform.language (its rule 3.4.2); elsewhere the browser language
+    var n = PG.on ? String(PG.b.platform.language || 'en').slice(0, 2).toLowerCase()
+      : String((window.navigator.languages && window.navigator.languages[0]) || window.navigator.language || 'en').slice(0, 2).toLowerCase();
     return LANGS.indexOf(n) >= 0 ? n : 'en';
   }
   function nowDate() {
@@ -482,6 +504,7 @@
     mute: '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/>',
     help: '<circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.9 2.6c-.7.3-1.2 1-1.2 1.8v.6"/><path d="M12 17.3h.01" stroke-width="3"/>',
     check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
     calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
     lock: '<rect x="5" y="11" width="14" height="9.5" rx="2.2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
@@ -512,12 +535,21 @@
 
   // =================================================================================================== storage
   var CG = { on: false, sdk: null, playing: false };
+  // Playgama Bridge state: PG.data caches what bridge.storage.get returned at boot (the Bridge API is async, the game reads synchronously)
+  var PG = { on: false, b: null, data: {}, paused: false, adI: false, adR: false, audio: true, reward: null };
   var Store = {
     get: function (k) {
-      try { if (CG.on && CG.sdk.data) return CG.sdk.data.getItem(k); return window.localStorage.getItem(k); } catch (e) { return null; }
+      try {
+        if (PG.on) { var v = PG.data[k]; return v == null ? null : (typeof v === 'string' ? v : JSON.stringify(v)); }
+        if (CG.on && CG.sdk.data) return CG.sdk.data.getItem(k);
+        return window.localStorage.getItem(k);
+      } catch (e) { return null; }
     },
     set: function (k, v) {
-      try { if (CG.on && CG.sdk.data) CG.sdk.data.setItem(k, v); else window.localStorage.setItem(k, v); } catch (e) { /* storage off: play on */ }
+      try {
+        if (PG.on) { PG.data[k] = v; Promise.resolve(PG.b.storage.set([k], [v])).catch(function () { /* not saved: play on */ }); return; }
+        if (CG.on && CG.sdk.data) CG.sdk.data.setItem(k, v); else window.localStorage.setItem(k, v);
+      } catch (e) { /* storage off: play on */ }
     }
   };
   var save = { v: 1, states: {}, best: {}, daily: {}, seenIntro: false, muted: false, level: 'easy', lang: '' };
@@ -532,18 +564,30 @@
   }
   var saveTimer = null;
   function persist(now) {
+    function write() { saveTimer = null; Store.set(CONFIG.storageKey, JSON.stringify(save)); }
+    if (now) { clearTimeout(saveTimer); write(); return; }
+    if (PG.on) { if (!saveTimer) saveTimer = setTimeout(write, 10000); return; }   // Bridge: at most one write per 10 s while playing; solve/leave/hide write at once
     clearTimeout(saveTimer);
-    if (now) { Store.set(CONFIG.storageKey, JSON.stringify(save)); return; }
-    saveTimer = setTimeout(function () { Store.set(CONFIG.storageKey, JSON.stringify(save)); }, 400);
+    saveTimer = setTimeout(write, 400);
   }
 
   // =================================================================================================== sound (synthesised)
+  // One volume controller: the game is audible only when no reason for silence holds (player mute, portal mute, portal pause,
+  // a full-screen ad, a hidden page). With CONFIG.audioFiles the effects are the shipped audio/*.mp3 files and a quiet music loop
+  // starts after the player's first tap; otherwise the effects are short synthesised tones and there is no music.
   var Sound = {
-    ctx: null,
+    ctx: null, files: {},
     muted: function () {
       var cgMute = false;
       try { cgMute = CG.on && CG.sdk.game.settings && CG.sdk.game.settings.muteAudio; } catch (e) { cgMute = false; }
-      return save.muted || cgMute || GM.ad;
+      return save.muted || cgMute || GM.ad || !PG.audio || PG.paused || PG.adI || PG.adR || Y8.ad || Y8.blur || doc.hidden;
+    },
+    playFile: function (kind) {
+      var a = this.files[kind];
+      if (!a) { a = this.files[kind] = new Audio('audio/' + kind + '.mp3'); a.preload = 'auto'; }
+      var x = a.paused || a.ended ? a : a.cloneNode();
+      x.currentTime = 0; x.volume = 0.8;
+      var pr = x.play(); if (pr && pr.catch) pr.catch(function () { /* autoplay blocked or file missing */ });
     },
     tone: function (freq, start, dur, type, vol) {
       var ctx = this.ctx, o = ctx.createOscillator(), g = ctx.createGain();
@@ -557,6 +601,7 @@
     },
     play: function (kind) {
       if (this.muted()) return;
+      if (CONFIG.audioFiles) { try { this.playFile(kind); } catch (e) { /* audio unavailable */ } return; }
       try {
         if (!this.ctx) { var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; this.ctx = new AC(); }
         if (this.ctx.state === 'suspended') this.ctx.resume();
@@ -568,6 +613,22 @@
       } catch (e) { /* audio unavailable */ }
     }
   };
+  var Music = {
+    el: null, armed: false,
+    arm: function () { if (!CONFIG.audioFiles || this.armed) return; this.armed = true; this.sync(); },   // first tap: browsers block audio before it
+    sync: function () {
+      if (!CONFIG.audioFiles || !this.armed) return;
+      try {
+        if (!Sound.muted()) {
+          if (!this.el) { this.el = new Audio('audio/music.mp3'); this.el.loop = true; this.el.volume = 0.5; }
+          if (this.el.paused) { var pr = this.el.play(); if (pr && pr.catch) pr.catch(function (e) { Music.err = e && e.name; if (Music.err === 'NotAllowedError') Music.armed = false; /* autoplay blocked: next tap retries; AbortError = paused by an ad */ }); }
+        } else if (this.el && !this.el.paused) this.el.pause();
+      } catch (e) { /* audio unavailable */ }
+    },
+    playing: function () { return !!(this.el && !this.el.paused); }
+  };
+  doc.addEventListener('pointerdown', function () { Music.arm(); }, true);
+  doc.addEventListener('keydown', function () { Music.arm(); }, true);
 
   // =================================================================================================== CrazyGames SDK (optional)
   function wantCrazy() { return CONFIG.crazygames || /[?&]crazygames=1(&|$)/.test(window.location.search); }
@@ -625,6 +686,155 @@
   }
   function gmAd() {
     try { if (GM.on && window.sdk && typeof window.sdk.showBanner === 'function') window.sdk.showBanner(); } catch (e) { /* never let ads break the game */ }
+  }
+
+  // =================================================================================================== Playgama Bridge (optional)
+  // Playgama edition: index.html loads the Bridge as the first script in <head> (package.py adds the tag) and the game waits for
+  // bridge.initialize() before it loads anything. Then: language from platform.language, saves only through bridge.storage (one key,
+  // read once at boot), audio + pause state from the platform, game_ready once the home screen is drawn. Interstitial: requested when
+  // a case opens and when the player goes back to the list (the Bridge decides whether one is shown). Rewarded: optional, a hint that
+  // costs no star; the normal hint always works without it. If the Bridge is missing the game runs as a plain build.
+  function loadPG() {
+    return new Promise(function (resolve) {
+      var b = window.bridge, done = false;
+      if (!CONFIG.playgama || !b || typeof b.initialize !== 'function') return resolve(false);
+      function finish(v) { if (!done) { done = true; resolve(v); } }
+      setTimeout(function () { finish(false); }, 8000);
+      Promise.resolve().then(function () { return b.initialize(); }).then(function () {
+        var E = b.EVENT_NAME || {};
+        try { PG.audio = b.platform.isAudioEnabled !== false; } catch (e) { /* keep default */ }
+        try { PG.adI = b.advertisement.interstitialState === 'opened'; } catch (e) { /* keep default */ }
+        try {
+          b.platform.on(E.AUDIO_STATE_CHANGED || 'audio_state_changed', function (on) { PG.audio = !!on; pauseSync(); });
+          b.platform.on(E.PAUSE_STATE_CHANGED || 'pause_state_changed', function (p) { PG.paused = !!p; pauseSync(); });
+          b.advertisement.on(E.INTERSTITIAL_STATE_CHANGED || 'interstitial_state_changed', function (s) { PG.adI = s === 'opened'; pauseSync(); });
+          b.advertisement.on(E.REWARDED_STATE_CHANGED || 'rewarded_state_changed', onRewarded);
+        } catch (e) { /* older Bridge: play on */ }
+        return Promise.resolve(b.storage.get([CONFIG.storageKey])).then(function (d) {
+          PG.data[CONFIG.storageKey] = d && d.length ? d[0] : null;
+        }, function () { /* nothing saved yet or storage unavailable */ }).then(function () {
+          if (done) return;
+          PG.b = b; PG.on = true; finish(true);
+        });
+      }).catch(function () { finish(false); });
+    });
+  }
+  function pg(fn) { if (PG.on) { try { fn(PG.b); } catch (e) { /* never let the Bridge break the game */ } } }
+  function adPause() { return GM.ad || PG.adI || PG.adR || PG.paused || Y8.ad || Y8.blur; }
+  function pauseSync() {   // ads, portal pause and a hidden page stop the clock; everything clear again restarts it
+    if (ui.screen === 'case' && ui.st && ui.st.started && !ui.st.solved) {
+      if (adPause() || doc.hidden) { if (ui.timerOn) stopTimer(); } else if (!ui.timerOn) startTimer();
+    }
+    Music.sync();
+  }
+  function pgInterstitial(placement) { pg(function (b) { b.advertisement.showInterstitial(placement); }); }
+  function pgLevel(msg) { var c = ui.c; pg(function (b) { b.platform.sendMessage(msg, { world: c.level, level: c.id }); }); }
+  function rewardedOK() { try { return !!Y8.sdk || PG.on && PG.b.advertisement.isRewardedSupported === true; } catch (e) { return false; } }
+  function askHint() {   // Hint button: offer the star-free ad hint only where the portal supports rewarded ads, else hint at once
+    var st = ui.st;
+    if (!st || st.solved) return;
+    var revealed = st.hints.filter(function (x) { return x.type === 'step'; }).map(function (x) { return x.i; });
+    if (!rewardedOK() || Logic.nextHint(ui.c, st.m, revealed).type === 'done') return hint();
+    showModal('<div class="modal"><div class="mh"><h2>' + esc(tr('hint_q')) + '</h2><button class="ibtn" data-act="close" aria-label="' + esc(tr('aria_close')) + '">✕</button></div>' +
+      '<div class="mb"><p class="muted" style="margin:0">' + esc(tr('hint_q_text')) + '</p></div>' +
+      '<div class="mf"><button class="btn ghost" data-act="hintfree">' + ic('bulb') + esc(tr('hint_use')) + '</button>' +
+      '<button class="btn sky" data-act="hintad">' + ic('play') + esc(tr('hint_ad')) + '</button></div></div>', { dismiss: true });
+  }
+  function adHint() {
+    closeModal();
+    if (Y8.sdk) return y8RewardedHint();
+    PG.reward = { key: ui.key, granted: false };
+    pg(function (b) { b.advertisement.showRewarded('free_hint'); });
+  }
+  function onRewarded(state) {
+    if (state === 'opened') PG.adR = true;                   // open until 'closed' or 'failed'
+    var r = PG.reward;
+    if (state === 'rewarded' && r && !r.granted) {          // the reward only on 'rewarded', never on 'closed'
+      r.granted = true;
+      if (ui.screen === 'case' && ui.key === r.key && !ui.st.solved) hint(true);
+    }
+    if (state === 'closed' || state === 'failed') {
+      PG.adR = false;
+      if (r && !r.granted && state === 'failed') toast(tr('ad_fail'));
+      PG.reward = null;
+    }
+    pauseSync();
+  }
+
+  // =================================================================================================== Kongregate API (optional)
+  // Kongregate edition: no ads in the game (Kongregate shows its own around it). The JS API is only used for statistics, which
+  // drive Kongregate badges; stats are re-sent on every load (they are 'Max' stats, so re-sending never lowers them). The game
+  // never waits for the API: if it is blocked or missing, play goes on.
+  var KG = { api: null };
+  function loadKong() {
+    if (!CONFIG.kongregate || !CONFIG.kongSdkUrl || doc.getElementById('kongregate-api')) return;
+    var s = doc.createElement('script');
+    s.id = 'kongregate-api';
+    s.src = CONFIG.kongSdkUrl;
+    s.onload = function () {
+      try {
+        window.kongregateAPI.loadAPI(function () {
+          try { KG.api = window.kongregate = window.kongregateAPI.getAPI(); kongStats(); } catch (e) { /* API unavailable */ }
+        });
+      } catch (e) { /* API unavailable */ }
+    };
+    doc.head.appendChild(s);
+  }
+  function kongStats() {   // names must match the statistics declared in the Kongregate upload form (see PORTALS.md)
+    if (!KG.api || !RAW.length) return;
+    try {
+      var best = save.best, ids = Object.keys(best), hard = 0, three = 0;
+      ids.forEach(function (id) { var c = BY_ID[id]; if (c && c.level === 'hard') hard++; if (best[id].stars === 3) three++; });
+      var st = KG.api.stats;                                   // five 'Max' stats, as Kongregate recommends 3-5
+      st.submit('CasesSolved', ids.length);
+      st.submit('HardSolved', hard);
+      st.submit('ThreeStarCases', three);
+      st.submit('DailyStreak', Logic.streak(save.daily, todayKey()));
+      st.submit('GameComplete', ids.length >= CASES.length ? 1 : 0);
+    } catch (e) { /* never let stats break the game */ }
+  }
+
+  // =================================================================================================== Y8 SDK (optional)
+  // Y8 edition: the SDK loads in the background (async, as Y8 asks) and the game never waits for it. Interstitial: only when the
+  // player opens a case with a click (Y8: ads only on Play/Next-type clicks, never automatic; Y8 runs the pre-roll itself).
+  // Rewarded: the optional star-free hint, granted only in adViewed. beforeAd/afterAd pause and resume the clock and the sound.
+  var Y8 = { sdk: null, ad: false, reward: null, blur: false };   // blur: Y8 wants pause + mute while the game window has lost focus
+  function loadY8() {
+    if (!CONFIG.y8) return;
+    window.addEventListener('blur', function () { Y8.blur = true; pauseSync(); });
+    window.addEventListener('focus', function () { Y8.blur = false; pauseSync(); });
+    if (!CONFIG.y8SdkUrl || !CONFIG.y8AppId || doc.getElementById('y8-sdk')) return;
+    window.addEventListener('y8sdk.ready', function () {
+      try {
+        var sdk = window.y8.sdk();
+        Promise.resolve(sdk.init({ appId: CONFIG.y8AppId, autoLogin: false }, { gameId: CONFIG.y8GameId, preloadAdBreaks: 'on', sound: 'on' }))
+          .then(function () { Y8.sdk = sdk; }, function () { /* init failed: play without ads */ });
+      } catch (e) { /* SDK unavailable */ }
+    }, { once: true });
+    var s = doc.createElement('script');
+    s.id = 'y8-sdk'; s.async = true;
+    s.src = CONFIG.y8SdkUrl;
+    s.onload = function () { try { if (window.y8 && window.y8.emitReadyEvent) window.y8.emitReadyEvent(); } catch (e) { /* ignore */ } };
+    doc.head.appendChild(s);
+  }
+  function y8Ad(opts) {
+    if (!Y8.sdk) return false;
+    var base = {
+      beforeAd: function () { Y8.ad = true; pauseSync(); },
+      afterAd: function () { Y8.ad = false; pauseSync(); }
+    };
+    Object.keys(opts).forEach(function (k) { base[k] = opts[k]; });
+    try { Y8.sdk.showAd(base); return true; } catch (e) { Y8.ad = false; return false; }
+  }
+  function y8RewardedHint() {
+    var r = Y8.reward = { key: ui.key, granted: false };
+    var ok = y8Ad({ type: 'reward', name: 'free-hint',
+      beforeReward: function (show) { show(); },                       // the player already chose "Watch an ad" in our own prompt
+      adViewed: function () { if (!r.granted) { r.granted = true; if (ui.screen === 'case' && ui.key === r.key && !ui.st.solved) hint(true); } },
+      adDismissed: function () { /* closed early: no reward */ },
+      adBreakDone: function (info) { Y8.ad = false; pauseSync(); if (!r.granted && info && info.breakStatus !== 'viewed' && info.breakStatus !== 'dismissed') toast(tr('ad_fail')); }
+    });
+    if (!ok) toast(tr('ad_fail'));
   }
 
   // =================================================================================================== layout
@@ -993,7 +1203,7 @@
     }
     return st;
   }
-  function hintsUsed(st) { return st.hints.length; }
+  function hintsUsed(st) { return st.hints.filter(function (x) { return !x.ad; }).length; }   // a rewarded-ad hint (Playgama) costs no star
   function hintsText(n) { return tr(n === 1 ? 'hint_one' : 'hint_other', { n: n }); }
   function solvedIds() { return Object.keys(save.best); }
   function todayKey() { return Logic.dateKey(nowDate()); }
@@ -1005,8 +1215,8 @@
     return short ? tr('case_short', { n: idx }) : tr('case_level', { level: lvName(c.level), n: idx });
   }
   function langSwitchHTML() {
-    return '<div class="langsw" role="group" aria-label="' + esc(tr('aria_lang')) + '">' + LANGS.map(function (l) {
-      return '<button class="' + (l === lang ? 'on' : '') + '" data-act="lang" data-l="' + l + '" lang="' + l + '">' + l.toUpperCase() + '</button>';
+    return '<div class="langsw" role="group" aria-label="' + esc(tr('aria_lang')) + '"><span class="globe">' + ic('globe') + '</span>' + LANGS.map(function (l) {
+      return '<button class="' + (l === lang ? 'on' : '') + '" data-act="lang" data-l="' + l + '" lang="' + l + '">' + LANG_NAMES[l] + '</button>';
     }).join('') + '</div>';
   }
   function adventOpen() { return Logic.adventOpen(todayKey()); }
@@ -1126,6 +1336,8 @@
     ui.accuse = { killer: -1, room: -1, hour: -1, object: -1 };
     renderCase();
     gmAd();
+    pgInterstitial('case_start');
+    y8Ad({ type: 'next', name: 'case-open' });
     if (ui.st.solved) { cgPlay(false); return; }
     if (!ui.st.started) showIntro(); else startPlay();
   }
@@ -1134,9 +1346,10 @@
     persist();
     startTimer();
     cgPlay(true);
+    pgLevel('level_started');
   }
   function leaveCase() {
-    if (ui.screen === 'case') { stopTimer(); persist(true); }
+    if (ui.screen === 'case') { stopTimer(); persist(true); pgInterstitial('case_exit'); }
     cgPlay(false);
     closeModal();
     ui.screen = 'home';
@@ -1318,7 +1531,7 @@
 
   // =================================================================================================== timer
   function startTimer() {
-    if (!ui.st || ui.st.solved || !ui.st.started || doc.hidden || GM.ad) return;
+    if (!ui.st || ui.st.solved || !ui.st.started || doc.hidden || adPause()) return;
     ui.timerOn = true; ui.lastTick = performance.now();
   }
   function stopTimer() { tick(); ui.timerOn = false; }
@@ -1336,7 +1549,7 @@
   setInterval(function () {
     if (ui.screen !== 'case' || !ui.timerOn) return;
     tick(); updateTimerText();
-    if (performance.now() - lastSaveTick > 5000) { lastSaveTick = performance.now(); persist(); }
+    if (performance.now() - lastSaveTick > (PG.on ? 30000 : 5000)) { lastSaveTick = performance.now(); persist(); }
   }, 250);
 
   // =================================================================================================== actions
@@ -1396,11 +1609,12 @@
     if (ui.spot >= 0) toast(ui.c.map.rooms[r].code + ' · ' + ui.c.map.rooms[r].name);
   }
 
-  function hint() {
+  function hint(free) {
     var c = ui.c, st = ui.st;
     if (st.solved) return;
     var revealed = st.hints.filter(function (x) { return x.type === 'step'; }).map(function (x) { return x.i; });
     var nx = Logic.nextHint(c, st.m, revealed);
+    if (free) nx.ad = true;
     st.hints.push(nx);
     Sound.play('hint');
     persist();
@@ -1477,12 +1691,12 @@
   }
   function showCaseFile() {
     showModal('<div class="modal wide"><div class="mh"><h2>' + esc(ui.c.title) + '</h2><button class="ibtn" data-act="close" aria-label="' + esc(tr('aria_close')) + '">✕</button></div><div class="mb">' +
-      caseFileHTML() + '</div><div class="mf"><button class="btn gold" data-act="close">Back to the case</button></div></div>', { dismiss: true });
+      caseFileHTML() + '</div><div class="mf"><button class="btn gold" data-act="close">' + esc(tr('back_case')) + '</button></div></div>', { dismiss: true });
   }
   function showHowTo() {
     showModal('<div class="modal wide"><div class="mh"><h2>' + esc(tr('howto')) + '</h2><button class="ibtn" data-act="close" aria-label="' + esc(tr('aria_close')) + '">✕</button></div><div class="mb">' +
       '<p class="muted" style="margin:0 0 .8rem">' + esc(tr('howto_intro')) + '</p>' + rulesHTML() +
-      '</div><div class="mf"><button class="btn gold" data-act="close">' + esc(tr('got_it')) + '</button></div></div>', { dismiss: true });
+      '<p class="muted privacy" style="margin:.9rem 0 0;font-size:.72rem">' + esc(tr('privacy')) + '</p></div><div class="mf"><button class="btn gold" data-act="close">' + esc(tr('got_it')) + '</button></div></div>', { dismiss: true });
   }
   function showIntro() {
     var c = ui.c, first = !save.seenIntro;
@@ -1545,6 +1759,8 @@
     persist(true);
     cgPlay(false);
     cg(function (sdk) { sdk.game.happytime(); });
+    pgLevel('level_completed');
+    kongStats();
     Sound.play('win');
     closeModal();
     renderCase();
@@ -1642,10 +1858,12 @@
       case 'lang': setLang(d('l')); save.lang = lang; persist(); if (ui.screen === 'advent') renderAdvent(); else renderHome(); break;
       case 'level': save.level = d('l'); persist(); renderHome(); break;
       case 'howto': showHowTo(); break;
-      case 'mute': save.muted = !save.muted; persist(); el.innerHTML = ic(save.muted ? 'mute' : 'sound'); if (!save.muted) Sound.play('circle'); break;
+      case 'mute': save.muted = !save.muted; persist(true); el.innerHTML = ic(save.muted ? 'mute' : 'sound'); Music.sync(); if (!save.muted) Sound.play('circle'); break;
       case 'close': dismissModal(); break;
       case 'start': save.seenIntro = true; closeModal(); ui.ptab = 'solve'; setTab('ptab', 'solve'); startPlay(); break;
-      case 'hint': hint(); break;
+      case 'hint': askHint(); break;
+      case 'hintfree': closeModal(); hint(); break;
+      case 'hintad': adHint(); break;
       case 'fillhint': fillHint(+d('i')); break;
       case 'hprev': ui.hintView = clamp((ui.hintView == null ? ui.st.hints.length - 1 : ui.hintView) - 1, 0, ui.st.hints.length - 1); refreshHintBar(); break;
       case 'hnext': ui.hintView = (ui.hintView == null ? ui.st.hints.length - 1 : ui.hintView) + 1; if (ui.hintView >= ui.st.hints.length - 1) ui.hintView = null; refreshHintBar(); break;
@@ -1679,6 +1897,7 @@
   doc.addEventListener('visibilitychange', function () {
     if (doc.hidden) { if (ui.screen === 'case') { stopTimer(); persist(true); } }
     else if (ui.screen === 'case' && ui.st && ui.st.started && !ui.st.solved) startTimer();
+    Music.sync();
   });
   window.addEventListener('pagehide', function () { if (ui.screen === 'case') stopTimer(); persist(true); });
 
@@ -1691,17 +1910,21 @@
     doc.title = CONFIG.title;
     applyLayout();
     loadGM();
-    loadCrazy().then(function () {
+    loadKong();
+    loadY8();
+    loadPG().then(loadCrazy).then(function () {
       cg(function (sdk) { sdk.game.loadingStart(); });
       loadSave();
       var q = /[?&]lang=(en|de|fr)(&|$)/.exec(window.location.search);
-      setLang(q ? q[1] : (LANGS.indexOf(save.lang) >= 0 ? save.lang : detectLang()));
+      setLang(q ? q[1] : (LANGS.indexOf(save.lang) >= 0 && !PG.on ? save.lang : detectLang()));
       return loadCases();
     }).then(function (data) {
       RAW = data.cases;
       buildCases();
       renderHome();
       cg(function (sdk) { sdk.game.loadingStop(); });
+      pg(function (b) { b.platform.sendMessage('game_ready'); });   // first playable frame is on screen
+      kongStats();
     }).catch(function (err) {
       app.innerHTML = '<div class="boot"><div><div class="logo">' + esc(CONFIG.title) + '</div><p>' + esc(tr('load_err')) + '</p></div></div>';
       if (window.console) console.error(err);
@@ -1722,6 +1945,7 @@
     accuse: function (k, r, h, o) { ui.accuse = { killer: k, room: r, hour: h, object: o }; doAccuse(); },
     solveNow: function () { var s = ui.c.solution; ui.accuse = { killer: s.killer, room: s.room, hour: s.hour, object: s.object }; doAccuse(); },
     hint: function () { hint(); },
+    clock: function (sec) { if (ui.st) { ui.st.t = sec; updateTimerText(); } },   // store screenshots: a believable clock instead of 0:00
     strike: function (i) { toggleClue(i); },
     tab: function (which, v) { setTab(which, v); },
     home: function () { renderHome(); },
@@ -1730,6 +1954,7 @@
     lang: function (l) { if (l) { setLang(l); } return lang; },
     missing: function () { return missing.slice(); },
     isWeb: isWeb,
+    audio: function () { return { muted: Sound.muted(), music: Music.playing(), musicErr: Music.err || '', armed: Music.armed, files: CONFIG.audioFiles, bridge: PG.on, timer: !!ui.timerOn }; },
     cases: function () { return CASES; },
     mode: function () { return ui.mode; },
     logic: Logic
